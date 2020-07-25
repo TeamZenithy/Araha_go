@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES6",
+    "lib": ["ES2017"],
+    "sourceMap": false,
+    "allowJs": false,
+    "outDir": "./build",
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  },
+  "include": ["./src"],
+  "exclude": ["./node_modules"]
+}
