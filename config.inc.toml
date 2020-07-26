@@ -1,0 +1,7 @@
+[discord]
+    token=""
+    prefix=""
+[lavalink]
+    host=""
+    port=""
+    password=""
