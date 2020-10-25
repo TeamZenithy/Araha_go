@@ -1,4 +1,4 @@
-package gavalink
+package audioengine
 
 import (
 	"bytes"
@@ -21,8 +21,6 @@ func DecodeString(data string) (*TrackInfo, error) {
 
 // Decode decodes a reader into a TrackInfo
 func Decode(r io.Reader) (*TrackInfo, error) {
-	// https://github.com/serenity-rs/lavalink.rs/blob/master/src/decoder.rs
-
 	var value uint8
 	if err := binary.Read(r, binary.LittleEndian, &value); err != nil {
 		return nil, err
@@ -97,10 +95,10 @@ func Decode(r io.Reader) (*TrackInfo, error) {
 		}
 	}
 
-	/*source, err := readString(r)
-	if err != nil {
-		return nil, err
-	}*/
+	// source, err := readString(r)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
 	track := &TrackInfo{
 		Identifier: identifier,

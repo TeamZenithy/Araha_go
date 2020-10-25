@@ -1,4 +1,4 @@
-package gavalink
+package audioengine
 
 import (
 	"errors"
@@ -38,7 +38,7 @@ func NewLavalink(shards string, userID string) *Lavalink {
 	return &Lavalink{
 		shards: shards,
 		userID: userID,
-		/*		nodes:   make([]Node, 1),*/
+		// nodes:   make([]Node, 1),
 		players: make(map[string]*Player),
 	}
 }

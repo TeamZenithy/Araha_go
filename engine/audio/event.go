@@ -1,4 +1,4 @@
-package gavalink
+package audioengine
 
 // EventHandler defines events that Lavalink may send to a player
 type EventHandler interface {
@@ -7,8 +7,7 @@ type EventHandler interface {
 	OnTrackStuck(player *Player, track string, threshold int) error
 }
 
-// DummyEventHandler provides an empty event handler for users who
-// wish to drop events outright. This is not recommended.
+// DummyEventHandler provides an empty event handler for users who wish to drop events outright. This is not recommended.
 type DummyEventHandler struct{}
 
 // OnTrackEnd is raised when a track ends

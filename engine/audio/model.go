@@ -1,4 +1,4 @@
-package gavalink
+package audioengine
 
 const (
 	// TrackLoaded is a Tracks Type for a succesful single track load

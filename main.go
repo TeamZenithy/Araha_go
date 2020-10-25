@@ -10,13 +10,13 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/TeamZenithy/Araha/gavalink"
+	audioengine "github.com/TeamZenithy/Araha/engine/audio"
 	"github.com/bwmarrin/discordgo"
 )
 
 var token string
-var lavalink *gavalink.Lavalink
-var player *gavalink.Player
+var lavalink *audioengine.Lavalink
+var player *audioengine.Player
 
 func init() {
 	token = "bottoken"
@@ -57,12 +57,12 @@ func ready(s *discordgo.Session, event *discordgo.Ready) {
 	log.Println("discordgo ready!")
 	s.UpdateStatus(0, "gavalink")
 
-	lavalink = gavalink.NewLavalink("1", event.User.ID)
+	lavalink = audioengine.NewLavalink("1", event.User.ID)
 
-	err := lavalink.AddNodes(gavalink.NodeConfig{
+	err := lavalink.AddNodes(audioengine.NodeConfig{
 		REST:      "http://localhost:2333",
 		WebSocket: "ws://localhost:2333",
-		Password:  "lavalinkpassword",
+		Password:  "youshallnotpass",
 	})
 	if err != nil {
 		log.Println(err)
@@ -105,15 +105,16 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			log.Println(errBestNode)
 			return
 		}
-		tracks, errLoadTracks := node.LoadTracks(query)
+		log.Println(query)
+		tracks, errLoadTracks := node.LoadTracks("ytsearch", query)
 		if errLoadTracks != nil {
 			log.Println(errLoadTracks)
 			return
 		}
-		if tracks.Type != gavalink.TrackLoaded {
+		if tracks.Type != audioengine.TrackLoaded {
 			log.Println("weird tracks type", tracks.Type)
 		}
-		if tracks.Type == gavalink.NoMatches {
+		if tracks.Type == audioengine.NoMatches {
 			fmt.Println("NO Result")
 			return
 		}
@@ -148,8 +149,8 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func voiceServerUpdate(s *discordgo.Session, event *discordgo.VoiceServerUpdate) {
-	log.Println("received VSU")
-	vsu := gavalink.VoiceServerUpdate{
+	log.Println("received Vioce Server Update event.")
+	vsu := audioengine.VoiceServerUpdate{
 		Endpoint: event.Endpoint,
 		GuildID:  event.GuildID,
 		Token:    event.Token,
@@ -169,7 +170,7 @@ func voiceServerUpdate(s *discordgo.Session, event *discordgo.VoiceServerUpdate)
 		return
 	}
 
-	handler := new(gavalink.DummyEventHandler)
+	handler := new(audioengine.DummyEventHandler)
 	player, err = node.CreatePlayer(event.GuildID, s.State.SessionID, vsu, handler)
 	if err != nil {
 		log.Println(err)

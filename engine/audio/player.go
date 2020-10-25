@@ -1,4 +1,4 @@
-package gavalink
+package audioengine
 
 import (
 	"encoding/json"

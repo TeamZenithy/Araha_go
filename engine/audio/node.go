@@ -1,12 +1,12 @@
-package gavalink
+package audioengine
 
 import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strconv"
-	"strings"
 
 	"github.com/gorilla/websocket"
 )
@@ -174,8 +174,9 @@ func (node *Node) CreatePlayer(guildID string, sessionID string, event VoiceServ
 // - A search query, prefixed with ytsearch: or scsearch:
 //
 // See the Lavaplayer Source Code for all valid options.
-func (node *Node) LoadTracks(query string) (*Tracks, error) {
-	url := fmt.Sprintf("%s/loadtracks?identifier=%s", node.config.REST, strings.Replace(query, " ", "%20", -1))
+func (node *Node) LoadTracks(queryType string, query string) (*Tracks, error) {
+	query = queryType + ":" + query
+	url := fmt.Sprintf("%s/loadtracks?identifier=%s", node.config.REST, url.QueryEscape(query))
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
