@@ -17,6 +17,7 @@ config.toml
 .DS_Store
 CompileDaemon
 .idea/
+lavalink/logs
 lavalink/Lavalink_s.jar
 lavalink/application.yml
 lavalink/Lavalink.jar

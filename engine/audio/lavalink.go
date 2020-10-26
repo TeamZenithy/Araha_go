@@ -7,11 +7,11 @@ import (
 	"sort"
 )
 
-// Log sets the log.Logger gavalink will write to
+// Log sets the log.Logger audio engine will write to
 var Log *log.Logger
 
 func init() {
-	Log = log.New(os.Stdout, "(gavalink) ", 0)
+	Log = log.New(os.Stdout, "(audioEngine) ", 0)
 }
 
 // Lavalink manages a connection to Lavalink Nodes

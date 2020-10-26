@@ -1,7 +1,2 @@
-[discord]
-    token=""
-    prefix=""
-[lavalink]
-    host=""
-    port=""
-    password=""
+prefix = "!?"
+token = "YOUR_DISCORD_BOT_TOKEN_HERE"
