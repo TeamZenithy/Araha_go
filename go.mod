@@ -7,4 +7,5 @@ require (
 	github.com/bwmarrin/discordgo v0.22.0
 	github.com/gorilla/websocket v1.4.0
 	github.com/ztrue/tracerr v0.3.0
+	gorm.io/gorm v1.20.8
 )

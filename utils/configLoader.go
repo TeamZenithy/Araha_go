@@ -1,31 +1,38 @@
 package utils
 
 import (
-	"github.com/TeamZenithy/Araha/structure"
 	"log"
+
+	"github.com/TeamZenithy/Araha/structure"
 
 	"github.com/BurntSushi/toml"
 )
 
 //LoadConfig get rawConfig string and returns error, prefix, token
-func loadConfig(rawConfig string) (errLoadFailed error, prefix string, token string) {
+func loadConfig(rawConfig string) (prefix string, token string, lavalinkHost string, lavalinkPort string, lavalinkPass string, errLoadFailed error) {
 	var config structure.Config
 	_, err := toml.Decode(rawConfig, &config)
 	if err != nil {
 		log.Fatal(err)
-		return err, "", ""
+		return "", "", "", "", "", err
 	}
-	return nil, config.Prefix, config.Token
+	return config.Prefix, config.Token, config.Lavalink_host, config.Lavalink_port, config.Lavalink_pass, nil
 }
 
 //GetToken returns token
-func GetToken(rawConfig string) (err error, token string) {
-	err, _, token = loadConfig(rawConfig)
-	return err, token
+func GetToken(rawConfig string) (token string, err error) {
+	_, token, _, _, _, err = loadConfig(rawConfig)
+	return token, err
 }
 
-//GetPrefix returns token
-func GetPrefix(rawConfig string) (err error, prefix string) {
-	err, prefix, _ = loadConfig(rawConfig)
-	return err, prefix
+//GetPrefix returns prefix
+func GetPrefix(rawConfig string) (prefix string, err error) {
+	prefix, _, _, _, _, err = loadConfig(rawConfig)
+	return prefix, err
+}
+
+//GetLavalinkConfig returns lavalink configs
+func GetLavalinkConfig(rawConfig string) (host, port, pass string, err error) {
+	_, _, host, port, pass, err = loadConfig(rawConfig)
+	return host, port, pass, err
 }

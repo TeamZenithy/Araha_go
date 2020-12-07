@@ -1,32 +1,34 @@
 package help
 
 import (
-	"github.com/TeamZenithy/Araha/handler"
 	"fmt"
 	"strings"
+
+	"github.com/TeamZenithy/Araha/handler"
 )
 
+//Initialize command
 func Initialize() {
 	handler.AddCommand(
 		handler.Command{
 			Run:                  run,
 			Names:                []string{commandName},
 			RequiredArgumentType: []string{commandArg},
-			Usage:                map[string]string{"필요한 권한":"**``없음``**", "설명":"``모든 명령어의 도움말을 표시합니다.``", "사용법": "```css\n?!help 명령어```"},
+			Usage:                map[string]string{"필요한 권한": "**``없음``**", "설명": "``모든 명령어의 도움말을 표시합니다.``", "사용법": "```css\n?!help 명령어```"},
 		},
 	)
 }
 
 const (
 	commandName = "help"
-	commandArg = "명령어"
+	commandArg  = "명령어"
 )
 
 func run(ctx handler.CommandContext) error {
 	if _, exists := ctx.Arguments[commandArg]; exists {
 		// show specific information about a command
-		var command, exists_ = handler.Commands[strings.ToLower(ctx.Arguments[commandArg])]
-		if exists_ {
+		var command, isExists = handler.Commands[strings.ToLower(ctx.Arguments[commandArg])]
+		if isExists {
 			var formattedCommandNames []string
 
 			for _, value := range command.Names {
@@ -59,19 +61,15 @@ func run(ctx handler.CommandContext) error {
 					"\n",
 					strings.Join(formattedUsage, "")))
 			return err
-		} else {
-			// command doesn't exist
-			var _, err = ctx.Message.Reply("해당 명령어를 찾을 수 없습니다!")
-			return err
 		}
-	} else {
-		// list commands
-		var outputStr = ">>> 명령어 목록:\n"
-		for commandName := range handler.Commands {
-			outputStr += fmt.Sprint("`", commandName, "`, ")
-		}
-		outputStr = outputStr[:len(outputStr)-len(", ")]
-		var _, err = ctx.Message.Reply(outputStr)
+		var _, err = ctx.Message.Reply("해당 명령어를 찾을 수 없습니다!")
 		return err
 	}
+	var outputStr = ">>> 명령어 목록:\n"
+	for commandName := range handler.Commands {
+		outputStr += fmt.Sprint("`", commandName, "`, ")
+	}
+	outputStr = outputStr[:len(outputStr)-len(", ")]
+	var _, err = ctx.Message.Reply(outputStr)
+	return err
 }

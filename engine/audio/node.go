@@ -175,7 +175,7 @@ func (node *Node) CreatePlayer(guildID string, sessionID string, event VoiceServ
 //
 // See the Lavaplayer Source Code for all valid options.
 func (node *Node) LoadTracks(queryType string, query string) (*Tracks, error) {
-	query = queryType + ":" + query
+	query = queryType + query
 	url := fmt.Sprintf("%s/loadtracks?identifier=%s", node.config.REST, url.QueryEscape(query))
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {

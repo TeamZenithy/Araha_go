@@ -1,15 +1,16 @@
 package main
 
 import (
-	"github.com/TeamZenithy/Araha/events"
-	"github.com/TeamZenithy/Araha/initializer"
-	"github.com/TeamZenithy/Araha/utils"
-	"github.com/bwmarrin/discordgo"
 	"io/ioutil"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/TeamZenithy/Araha/events"
+	"github.com/TeamZenithy/Araha/initializer"
+	"github.com/TeamZenithy/Araha/utils"
+	"github.com/bwmarrin/discordgo"
 )
 
 func main() {
@@ -18,7 +19,7 @@ func main() {
 		log.Fatalln("Error while load config file: " + errFindConfigFile.Error())
 		return
 	}
-	errLoadConfigData, token := utils.GetToken(string(rawConfig))
+	token, errLoadConfigData := utils.GetToken(string(rawConfig))
 	if errLoadConfigData != nil {
 		log.Fatalln("Error while load config data: " + errLoadConfigData.Error())
 	}
@@ -28,6 +29,7 @@ func main() {
 	bot.AddHandler(events.Ready)
 	bot.AddHandler(events.MessageCreate)
 	bot.AddHandler(events.VoiceServerUpdate)
+	bot.AddHandler(events.VoiceStateUpdate)
 
 	initializer.InitCommands()
 	err = bot.Open()
@@ -37,9 +39,6 @@ func main() {
 	}
 
 	log.Println("Bot is now running.")
-
-	// wait forever
-	select {}
 
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)

@@ -1,23 +1,25 @@
 package events
 
 import (
-	"github.com/TeamZenithy/Araha/handler"
-	"github.com/TeamZenithy/Araha/utils"
 	"fmt"
 	"io/ioutil"
+
+	"github.com/TeamZenithy/Araha/handler"
+	"github.com/TeamZenithy/Araha/utils"
 
 	"github.com/bwmarrin/discordgo"
 )
 
+//MessageCreate gets message event from discord
 func MessageCreate(session *discordgo.Session, event *discordgo.MessageCreate) {
 	rawConfig, errFindConfigFile := ioutil.ReadFile("config.toml") // just pass the file name
 	if errFindConfigFile != nil {
-		fmt.Println("Error while load config file: " + errFindConfigFile.Error())
+		fmt.Printf("Error while load config file: %v", errFindConfigFile.Error())
 		return
 	}
-	errLoadConfigData, prefix := utils.GetPrefix(string(rawConfig))
+	prefix, errLoadConfigData := utils.GetPrefix(string(rawConfig))
 	if errLoadConfigData != nil {
-		fmt.Println("Error while load config data: " + errLoadConfigData.Error())
+		fmt.Printf("Error while load config data: %v", errLoadConfigData.Error())
 	}
 	go handler.HandleCreatedMessage(session, event, prefix)
 }

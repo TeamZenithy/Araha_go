@@ -4,4 +4,7 @@ package structure
 type Config struct {
 	Prefix string
 	Token string
+	Lavalink_host string
+	Lavalink_port string
+	Lavalink_pass string
 }
