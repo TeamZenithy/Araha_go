@@ -1,5 +1,6 @@
 prefix = "!?"
 token = "YOUR_DISCORD_BOT_TOKEN_HERE"
+owner = [OWNER_DISCORD_ID]
 lavalinkHost = "localhost"
 lavalinkPort = "2333"
 lavalinkPass = "youshallnotpass"

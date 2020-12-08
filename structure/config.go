@@ -4,6 +4,7 @@ package structure
 type Config struct {
 	Prefix       string
 	Token        string
+	Owners       []string
 	LavalinkHost string
 	LavalinkPort string
 	LavalinkPass string

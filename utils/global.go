@@ -14,3 +14,10 @@ const (
 	//QUERY_TYPE_URL is for url search
 	QUERY_TYPE_URL = ""
 )
+
+//Command Category
+const (
+	CATEGORY_GENERAL = 0
+	CATEGORY_MUSIC   = 1
+	CATEGORY_DEV     = 2
+)

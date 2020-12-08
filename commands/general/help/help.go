@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/TeamZenithy/Araha/utils"
+
 	"github.com/TeamZenithy/Araha/handler"
 )
 
@@ -12,8 +14,10 @@ func Initialize() {
 	handler.AddCommand(
 		handler.Command{
 			Run:                  run,
-			Names:                []string{commandName},
+			Name:                 commandName,
+			Aliases:              []string{"h", "guide", "manual"},
 			RequiredArgumentType: []string{commandArg},
+			Category:             utils.CATEGORY_GENERAL,
 			Usage:                map[string]string{"필요한 권한": "**``없음``**", "설명": "``모든 명령어의 도움말을 표시합니다.``", "사용법": "```css\n?!help 명령어```"},
 		},
 	)
@@ -27,15 +31,20 @@ const (
 func run(ctx handler.CommandContext) error {
 	if _, exists := ctx.Arguments[commandArg]; exists {
 		// show specific information about a command
-		var command, isExists = handler.Commands[strings.ToLower(ctx.Arguments[commandArg])]
+		command, isExists := handler.Commands[strings.ToLower(ctx.Arguments[commandArg])]
+		aliasCommand, isExistsAliasCommand := handler.Aliases[strings.ToLower(ctx.Arguments[commandArg])]
+
+		if !isExists && isExistsAliasCommand {
+			isExists = isExistsAliasCommand
+			command = handler.Commands[aliasCommand]
+		}
+
 		if isExists {
 			var formattedCommandNames []string
 
-			for _, value := range command.Names {
-				formattedCommandNames = append(
-					formattedCommandNames,
-					fmt.Sprint(">>> 명령어: `", value, "`"))
-			}
+			formattedCommandNames = append(
+				formattedCommandNames,
+				fmt.Sprint(">>> 명령어: `", command.Name, "`"))
 
 			var formattedRequiredArgumentType []string
 
@@ -43,6 +52,16 @@ func run(ctx handler.CommandContext) error {
 				formattedRequiredArgumentType = append(
 					formattedRequiredArgumentType,
 					fmt.Sprint("`", value, "`"))
+			}
+
+			var formattedCommandAliases []string
+
+			if formattedCommandAliases == nil || len(command.Aliases) == 1 && command.Aliases[0] == "" {
+				formattedCommandAliases = append(formattedCommandAliases, fmt.Sprint("`없음`"))
+			} else {
+				for _, value := range command.Aliases {
+					formattedCommandAliases = append(formattedCommandAliases, fmt.Sprint("`", value, "`"))
+				}
 			}
 
 			var formattedUsage []string
@@ -56,6 +75,8 @@ func run(ctx handler.CommandContext) error {
 			var _, err = ctx.Message.Reply(
 				fmt.Sprint(
 					strings.Join(formattedCommandNames, ", "),
+					"\n별칭: ",
+					strings.Join(formattedCommandAliases, ", "),
 					"\n필요로 하는 인자: ",
 					strings.Join(formattedRequiredArgumentType, ", "),
 					"\n",

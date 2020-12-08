@@ -18,6 +18,8 @@ const (
 var (
 	//Commands is a map of string
 	Commands map[string]Command
+	//Aliases is a map of string
+	Aliases map[string]string
 )
 
 //CommandContext is ctx
@@ -30,20 +32,27 @@ type CommandContext struct {
 //Command includes Run(function), Name(list of srings), Required args type(list of strings), and Usage(map of string and string)
 type Command struct {
 	Run                  func(ctx CommandContext) error
-	Names                []string
+	Name                 string
+	Aliases              []string
 	RequiredArgumentType []string
+	Category             int
 	Usage                map[string]string
 }
 
 //InitCommands Initialize the Commands map
 func InitCommands() {
 	Commands = make(map[string]Command)
+	Aliases = make(map[string]string)
 }
 
 //AddCommand Adds a command to the Commands map
 func AddCommand(command Command) {
-	for _, name := range command.Names {
-		Commands[name] = command
+	// for _, name := range command.Names {
+	// 	Commands[name] = command
+	// }
+	Commands[command.Name] = command
+	for _, alias := range command.Aliases {
+		Aliases[alias] = command.Name
 	}
 }
 
@@ -66,22 +75,50 @@ func HandleCreatedMessage(session *discordgo.Session, message *discordgo.Message
 		commandName = message.Content[len(prefix):strings.Index(message.Content, stringSeparator)]
 	}
 
-	var command, exists = Commands[commandName]
+	// var command, exists = Commands[commandName]
 
-	if !exists {
+	// if !exists {
+	// 	return
+	// }
+
+	// var context = CommandContext{
+	// 	Session: session,
+	// 	Message: objects.ExtendMessage(message.Message, session),
+	// 	Arguments: parseArguments(
+	// 		message.Content,
+	// 		command.RequiredArgumentType,
+	// 		command.Usage),
+	// }
+
+	// var err = command.Run(context)
+
+	var err error = nil
+	if command, ok := Commands[commandName]; ok {
+		var context = CommandContext{
+			Session: session,
+			Message: objects.ExtendMessage(message.Message, session),
+			Arguments: parseArguments(
+				message.Content,
+				command.RequiredArgumentType,
+				command.Usage),
+		}
+		err = command.Run(context)
 		return
 	}
 
-	var context = CommandContext{
-		Session: session,
-		Message: objects.ExtendMessage(message.Message, session),
-		Arguments: parseArguments(
-			message.Content,
-			command.RequiredArgumentType,
-			command.Usage),
+	if command, ok := Aliases[commandName]; ok {
+		var context = CommandContext{
+			Session: session,
+			Message: objects.ExtendMessage(message.Message, session),
+			Arguments: parseArguments(
+				message.Content,
+				Commands[command].RequiredArgumentType,
+				Commands[command].Usage),
+		}
+		err = Commands[command].Run(context)
+		return
 	}
 
-	var err = command.Run(context)
 	if err != nil {
 		tracerr.PrintSourceColor(err)
 		_, err = session.ChannelMessageSend(
