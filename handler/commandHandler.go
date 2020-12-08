@@ -1,9 +1,10 @@
 package handler
 
 import (
-	"github.com/TeamZenithy/Araha/extensions/objects"
 	"fmt"
 	"strings"
+
+	"github.com/TeamZenithy/Araha/extensions/objects"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/ztrue/tracerr"
@@ -15,15 +16,18 @@ const (
 )
 
 var (
+	//Commands is a map of string
 	Commands map[string]Command
 )
 
+//CommandContext is ctx
 type CommandContext struct {
 	Session   *discordgo.Session
 	Message   *objects.ExtendedMessage
 	Arguments map[string]string
 }
 
+//Command includes Run(function), Name(list of srings), Required args type(list of strings), and Usage(map of string and string)
 type Command struct {
 	Run                  func(ctx CommandContext) error
 	Names                []string
@@ -31,19 +35,19 @@ type Command struct {
 	Usage                map[string]string
 }
 
-// Initialize the Commands map
+//InitCommands Initialize the Commands map
 func InitCommands() {
 	Commands = make(map[string]Command)
 }
 
-// Adds a command to the Commands map
+//AddCommand Adds a command to the Commands map
 func AddCommand(command Command) {
 	for _, name := range command.Names {
 		Commands[name] = command
 	}
 }
 
-// Handle a message creation event
+//HandleCreatedMessage Handle a message creation event
 func HandleCreatedMessage(session *discordgo.Session, message *discordgo.MessageCreate, prefix string) {
 	if message.Author.ID == session.State.User.ID || message.Author.Bot {
 		return

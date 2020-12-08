@@ -7,6 +7,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+//GetUsersInVoice returns number of users exclude of bot self.
 func GetUsersInVoice(guild *discordgo.Guild) int {
 	usersInVoice := 0
 	for _, vs := range guild.VoiceStates {

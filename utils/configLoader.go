@@ -16,7 +16,7 @@ func loadConfig(rawConfig string) (prefix string, token string, lavalinkHost str
 		log.Fatal(err)
 		return "", "", "", "", "", err
 	}
-	return config.Prefix, config.Token, config.Lavalink_host, config.Lavalink_port, config.Lavalink_pass, nil
+	return config.Prefix, config.Token, config.LavalinkHost, config.LavalinkPort, config.LavalinkPass, nil
 }
 
 //GetToken returns token

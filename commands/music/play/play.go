@@ -27,9 +27,6 @@ func Initialize() {
 const (
 	commandName = "play"
 	commandArg  = "노래 이름 또는 링크"
-
-	QUERY_TYPE_YOUTUBE = "ytsearch:"
-	QUERY_TYPE_URL     = ""
 )
 
 func run(ctx handler.CommandContext) error {
@@ -99,9 +96,9 @@ func run(ctx handler.CommandContext) error {
 	var tracks *audioengine.Tracks
 	var errLoadTracks error
 	if !strings.HasPrefix(query, "http") && !strings.Contains(query, "://") {
-		tracks, errLoadTracks = node.LoadTracks(QUERY_TYPE_YOUTUBE, query)
+		tracks, errLoadTracks = node.LoadTracks(utils.QUERY_TYPE_YOUTUBE, query)
 	} else {
-		tracks, errLoadTracks = node.LoadTracks(QUERY_TYPE_URL, query)
+		tracks, errLoadTracks = node.LoadTracks(utils.QUERY_TYPE_URL, query)
 	}
 	if errLoadTracks != nil {
 		_, errLoadTracks = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Error with query. Please try again or try a different query.\n"+err.Error())

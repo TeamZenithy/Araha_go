@@ -2,6 +2,7 @@ package utils
 
 import "github.com/bwmarrin/discordgo"
 
+//MemberHasPermission is a discord user's permission checker.
 func MemberHasPermission(s *discordgo.Session, guildID string, userID string, permission int) (bool, error) {
 	member, err := s.State.Member(guildID, userID)
 	if err != nil {

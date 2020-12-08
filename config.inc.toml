@@ -1,5 +1,5 @@
 prefix = "!?"
 token = "YOUR_DISCORD_BOT_TOKEN_HERE"
-lavalink_host = "localhost"
-lavalink_port = "2333"
-lavalink_pass = "youshallnotpass"
+lavalinkHost = "localhost"
+lavalinkPort = "2333"
+lavalinkPass = "youshallnotpass"

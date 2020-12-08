@@ -8,6 +8,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+//VoiceStateUpdate handles voice state update event
 func VoiceStateUpdate(session *discordgo.Session, event *discordgo.VoiceStateUpdate) {
 	ms, ok := model.Music[event.GuildID]
 	if !ok {
