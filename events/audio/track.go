@@ -22,7 +22,6 @@ type EventHandlerManager struct {
 
 //NewEventHandlerManager creates EventHAndlerManager with bellow events
 func NewEventHandlerManager() *EventHandlerManager {
-	log.Println("Added")
 	return &EventHandlerManager{
 		handler: make([]EventHandler, 0),
 	}
