@@ -1,10 +1,11 @@
 package initializer
 
 import (
+	"fmt"
 	"io/ioutil"
-	"log"
 
 	audioengine "github.com/TeamZenithy/Araha/engine/audio"
+	"github.com/TeamZenithy/Araha/logger"
 	"github.com/TeamZenithy/Araha/model"
 	"github.com/TeamZenithy/Araha/utils"
 	"github.com/bwmarrin/discordgo"
@@ -14,13 +15,13 @@ import (
 func InitAudioEngine(event *discordgo.Ready) {
 	rawConfig, errFindConfigFile := ioutil.ReadFile("config.toml") // just pass the file name
 	if errFindConfigFile != nil {
-		log.Fatalln("Error while load config file: " + errFindConfigFile.Error())
+		logger.Fatal(fmt.Sprintf("Error while load config file: %s", errFindConfigFile.Error()))
 		return
 	}
 	utils.Lavalink = audioengine.NewLavalink("1", event.User.ID)
 	host, port, pass, errLoadConfigData := utils.GetLavalinkConfig(string(rawConfig))
 	if errLoadConfigData != nil {
-		log.Fatalln("Error while load config data: " + errLoadConfigData.Error())
+		logger.Fatal(fmt.Sprintf("Error while load config data: %s", errLoadConfigData.Error()))
 	}
 
 	err := utils.Lavalink.AddNodes(audioengine.NodeConfig{
@@ -31,6 +32,6 @@ func InitAudioEngine(event *discordgo.Ready) {
 	model.Music = make(map[string]*model.MusicStruct)
 
 	if err != nil {
-		log.Println(err)
+		logger.Error(err.Error())
 	}
 }

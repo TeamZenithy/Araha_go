@@ -1,14 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/TeamZenithy/Araha/events"
 	"github.com/TeamZenithy/Araha/initializer"
+	"github.com/TeamZenithy/Araha/logger"
 	"github.com/TeamZenithy/Araha/utils"
 	"github.com/bwmarrin/discordgo"
 )
@@ -16,12 +17,12 @@ import (
 func main() {
 	rawConfig, errFindConfigFile := ioutil.ReadFile("config.toml") // just pass the file name
 	if errFindConfigFile != nil {
-		log.Fatalln("Error while load config file: " + errFindConfigFile.Error())
+		logger.Fatal(fmt.Sprintf("Error while load config file: %s", errFindConfigFile.Error()))
 		return
 	}
 	token, errLoadConfigData := utils.GetToken(string(rawConfig))
 	if errLoadConfigData != nil {
-		log.Fatalln("Error while load config data: " + errLoadConfigData.Error())
+		logger.Fatal(fmt.Sprintf("Error while load config data: %s", errLoadConfigData.Error()))
 	}
 
 	var bot, err = discordgo.New("Bot " + token)
@@ -32,13 +33,12 @@ func main() {
 	bot.AddHandler(events.VoiceStateUpdate)
 
 	initializer.InitCommands()
+	logger.Info("Trying to log in...")
 	err = bot.Open()
 
 	if err != nil {
-		log.Fatalln("Error opening Discord session: ", err)
+		logger.Fatal(fmt.Sprintf("Error opening Discord session: %v", err))
 	}
-
-	log.Println("Bot is now running.")
 
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)

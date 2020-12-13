@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 
 	"github.com/TeamZenithy/Araha/handler"
+	"github.com/TeamZenithy/Araha/logger"
 	"github.com/TeamZenithy/Araha/utils"
 
 	"github.com/bwmarrin/discordgo"
@@ -14,12 +15,12 @@ import (
 func MessageCreate(session *discordgo.Session, event *discordgo.MessageCreate) {
 	rawConfig, errFindConfigFile := ioutil.ReadFile("config.toml") // just pass the file name
 	if errFindConfigFile != nil {
-		fmt.Printf("Error while load config file: %v", errFindConfigFile.Error())
+		logger.Error(fmt.Sprintf("Error while load config file: %v", errFindConfigFile.Error()))
 		return
 	}
 	prefix, errLoadConfigData := utils.GetPrefix(string(rawConfig))
 	if errLoadConfigData != nil {
-		fmt.Printf("Error while load config data: %v", errLoadConfigData.Error())
+		logger.Error(fmt.Sprintf("Error while load config data: %v", errLoadConfigData.Error()))
 	}
 	go handler.HandleCreatedMessage(session, event, prefix)
 }

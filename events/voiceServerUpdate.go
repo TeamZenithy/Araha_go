@@ -1,10 +1,9 @@
 package events
 
 import (
-	"log"
-
 	audioengine "github.com/TeamZenithy/Araha/engine/audio"
 	events "github.com/TeamZenithy/Araha/events/audio"
+	"github.com/TeamZenithy/Araha/logger"
 	"github.com/TeamZenithy/Araha/model"
 	"github.com/TeamZenithy/Araha/utils"
 	"github.com/bwmarrin/discordgo"
@@ -12,7 +11,7 @@ import (
 
 //VoiceServerUpdate get voice server change / update events
 func VoiceServerUpdate(s *discordgo.Session, event *discordgo.VoiceServerUpdate) {
-	log.Println("Voice Server Update event triggered.")
+	logger.Info("Voice Server Update event triggered.")
 	vsu := audioengine.VoiceServerUpdate{
 		Endpoint: event.Endpoint,
 		GuildID:  event.GuildID,
@@ -24,7 +23,7 @@ func VoiceServerUpdate(s *discordgo.Session, event *discordgo.VoiceServerUpdate)
 		if p, err := utils.Lavalink.GetPlayer(event.GuildID); err == nil {
 			err = p.Forward(s.State.SessionID, vsu)
 			if err != nil {
-				log.Println(err)
+				logger.Error(err.Error())
 			}
 			return
 		}
@@ -32,14 +31,14 @@ func VoiceServerUpdate(s *discordgo.Session, event *discordgo.VoiceServerUpdate)
 
 	node, err := utils.Lavalink.BestNode()
 	if err != nil {
-		log.Println(err)
+		logger.Error(err.Error())
 		return
 	}
 
 	handler := events.NewEventHandlerManager()
 	utils.Player, err = node.CreatePlayer(event.GuildID, s.State.SessionID, vsu, handler)
 	if err != nil {
-		log.Println(err)
+		logger.Error(err.Error())
 		return
 	}
 

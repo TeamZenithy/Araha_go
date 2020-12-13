@@ -1,8 +1,7 @@
 package utils
 
 import (
-	"log"
-
+	"github.com/TeamZenithy/Araha/logger"
 	"github.com/TeamZenithy/Araha/structure"
 
 	"github.com/BurntSushi/toml"
@@ -13,7 +12,7 @@ func loadConfig(rawConfig string) (prefix string, token string, owners []string,
 	var config structure.Config
 	_, err := toml.Decode(rawConfig, &config)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err.Error())
 		return "", "", make([]string, 0), "", "", "", err
 	}
 	return config.Prefix, config.Token, config.Owners, config.LavalinkHost, config.LavalinkPort, config.LavalinkPass, nil

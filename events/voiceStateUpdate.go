@@ -1,8 +1,9 @@
 package events
 
 import (
-	"log"
+	"fmt"
 
+	"github.com/TeamZenithy/Araha/logger"
 	"github.com/TeamZenithy/Araha/model"
 	"github.com/TeamZenithy/Araha/utils"
 	"github.com/bwmarrin/discordgo"
@@ -17,13 +18,13 @@ func VoiceStateUpdate(session *discordgo.Session, event *discordgo.VoiceStateUpd
 
 	guild, err := session.State.Guild(event.GuildID)
 	if err != nil {
-		log.Printf("No guild found in State for %s: %s", event.GuildID, err)
+		logger.Warn(fmt.Sprintf("No guild found in State for %s: %s", event.GuildID, err))
 		return
 	}
 	if utils.GetUsersInVoice(guild) == 0 {
 		ms.SongEnd <- "end"
 		if returnedMessage := utils.LeaveAndDestroy(session, event.GuildID); returnedMessage != "" {
-			log.Print(returnedMessage)
+			logger.Info(returnedMessage)
 		}
 		return
 	}

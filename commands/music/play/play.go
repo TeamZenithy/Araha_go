@@ -169,7 +169,6 @@ func playSong(ctx handler.CommandContext, song model.Song, ms *model.MusicStruct
 		err = playSong(ctx, ms.Queue[0], ms, -1)
 	} else if end == "end" {
 		utils.LeaveAndDestroy(ctx.Session, ctx.Message.GuildID)
-		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ":musical_note: Playback finished.")
 	} else if strings.HasPrefix(end, "resume:") {
 		end = end[7:]
 		time, err := strconv.Atoi(end)
@@ -178,7 +177,7 @@ func playSong(ctx handler.CommandContext, song model.Song, ms *model.MusicStruct
 		}
 		err = playSong(ctx, song, ms, time)
 	} else {
-		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "An error occured with the track")
+		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "재생 문제가 발생했습니다. ")
 	}
 
 	return

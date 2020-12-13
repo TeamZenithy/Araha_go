@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"strconv"
 
+	"github.com/TeamZenithy/Araha/logger"
 	"github.com/gorilla/websocket"
 )
 
@@ -57,7 +58,7 @@ func (node *Node) open() error {
 	node.wsConn = ws
 	go node.listen()
 
-	Log.Println("node", node.config.WebSocket, "opened")
+	logger.Info(fmt.Sprintf("(audioEngine) node %s opened", node.config.WebSocket))
 
 	return nil
 }
@@ -74,22 +75,22 @@ func (node *Node) listen() {
 	for {
 		msgType, msg, err := node.wsConn.ReadMessage()
 		if err != nil {
-			Log.Println(err)
+			logger.Error(fmt.Sprintf("(audioEngine) %s", err.Error()))
 			// try to reconnect
 			oerr := node.open()
 			if oerr != nil {
-				Log.Println("node", node.config.WebSocket, "failed and could not reconnect, destroying.", err, oerr)
+				logger.Info(fmt.Sprintf("(audioEngine) node %s failed and could not reconnect, destroying.\nError: %s\n%s", node.config.WebSocket, err.Error(), oerr.Error()))
 				node.manager.removeNode(node)
 				return
 			}
-			Log.Println("node", node.config.WebSocket, "reconnected")
+			logger.Info(fmt.Sprintf("(audioEngine) node %s reconnected", node.config.WebSocket))
 			return
 		}
 		err = node.onEvent(msgType, msg)
 		// TODO: better error handling?
 
 		if err != nil {
-			Log.Println(err)
+			logger.Warn(fmt.Sprintf("(audioEngine) %s", err.Error()))
 		}
 	}
 }

@@ -1,9 +1,10 @@
 package whoami
 
 import (
+	"fmt"
 	"io/ioutil"
-	"log"
 
+	"github.com/TeamZenithy/Araha/logger"
 	"github.com/TeamZenithy/Araha/utils"
 
 	"github.com/TeamZenithy/Araha/handler"
@@ -31,12 +32,12 @@ const (
 func run(ctx handler.CommandContext) error {
 	rawConfig, errFindConfigFile := ioutil.ReadFile("config.toml") // just pass the file name
 	if errFindConfigFile != nil {
-		log.Fatalln("Error while load config file: " + errFindConfigFile.Error())
+		logger.Fatal(fmt.Sprintf("Error while load config file: %s", errFindConfigFile.Error()))
 		return nil
 	}
 	owners, errLoadConfigData := utils.GetOwners(string(rawConfig))
 	if errLoadConfigData != nil {
-		log.Fatalln("Error while load config data: " + errLoadConfigData.Error())
+		logger.Fatal(fmt.Sprintf("Error while load config data: %s", errLoadConfigData.Error()))
 		return nil
 	}
 	if utils.Contains(owners, ctx.Message.Author.ID) {

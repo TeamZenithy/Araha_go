@@ -2,17 +2,8 @@ package audioengine
 
 import (
 	"errors"
-	"log"
-	"os"
 	"sort"
 )
-
-// Log sets the log.Logger audio engine will write to
-var Log *log.Logger
-
-func init() {
-	Log = log.New(os.Stdout, "(audioEngine) ", 0)
-}
 
 // Lavalink manages a connection to Lavalink Nodes
 type Lavalink struct {
