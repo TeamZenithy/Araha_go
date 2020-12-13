@@ -8,5 +8,4 @@ require (
 	github.com/gorilla/websocket v1.4.0
 	github.com/sirupsen/logrus v1.7.0
 	github.com/ztrue/tracerr v0.3.0
-	gorm.io/gorm v1.20.8
 )
