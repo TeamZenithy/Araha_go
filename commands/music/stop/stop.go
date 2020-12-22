@@ -1,6 +1,8 @@
 package stop
 
 import (
+	"fmt"
+
 	"github.com/TeamZenithy/Araha/handler"
 	"github.com/TeamZenithy/Araha/utils"
 )
@@ -14,7 +16,7 @@ func Initialize() {
 			Aliases:              []string{"quit"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_MUSIC,
-			Usage:                map[string]string{"필요한 권한": "**``음성 채널 발언권``**", "설명": "``노래를 중지하고 대기열을 초기화 합니다.``", "사용법": "```css\n?!stop```"},
+			Usage:                map[string]string{"필요한 권한": "**``음성 채널 발언권``**", "설명": "``노래를 중지하고 대기열을 초기화 합니다.``", "사용법": fmt.Sprintf("```css\n%sstop```", utils.Prefix)},
 		},
 	)
 }

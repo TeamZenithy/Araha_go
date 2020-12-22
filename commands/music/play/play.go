@@ -21,7 +21,7 @@ func Initialize() {
 			Aliases:              []string{"p"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_MUSIC,
-			Usage:                map[string]string{"필요한 권한": "**``음성 채널 발언권``**", "설명": "``요청된 이름의 노래 또는 링크를 검색해서 음원을 재생합니다.``", "사용법": "```css\n?!play 노래 이름 또는 링크```"},
+			Usage:                map[string]string{"필요한 권한": "**``음성 채널 발언권``**", "설명": "``요청된 이름의 노래 또는 링크를 검색해서 음원을 재생합니다.``", "사용법": fmt.Sprintf("```css\n%splay 노래 이름 또는 링크```", utils.Prefix)},
 		},
 	)
 }
@@ -177,7 +177,7 @@ func playSong(ctx handler.CommandContext, song model.Song, ms *model.MusicStruct
 		}
 		err = playSong(ctx, song, ms, time)
 	} else {
-		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "재생 문제가 발생했습니다. ")
+		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "재생중 문제가 발생했습니다.")
 	}
 
 	return

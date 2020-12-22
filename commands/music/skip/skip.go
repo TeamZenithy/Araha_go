@@ -18,7 +18,7 @@ func Initialize() {
 			Aliases:              []string{"s"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_MUSIC,
-			Usage:                map[string]string{"필요한 권한": "**``음성 채널 발언권``**", "설명": "``현재 재생중인 노래를 건너뜁니다.``", "사용법": "```css\n?!skip```"},
+			Usage:                map[string]string{"필요한 권한": "**``음성 채널 발언권``**", "설명": "``현재 재생중인 노래를 건너뜁니다.``", "사용법": fmt.Sprintf("```css\n%sskip```", utils.Prefix)},
 		},
 	)
 }

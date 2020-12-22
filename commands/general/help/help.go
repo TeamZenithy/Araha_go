@@ -18,7 +18,7 @@ func Initialize() {
 			Aliases:              []string{"h", "guide", "manual"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_GENERAL,
-			Usage:                map[string]string{"필요한 권한": "**``없음``**", "설명": "``모든 명령어의 도움말을 표시합니다.``", "사용법": "```css\n?!help 명령어```"},
+			Usage:                map[string]string{"필요한 권한": "**``없음``**", "설명": "``모든 명령어의 도움말을 표시합니다.``", "사용법": fmt.Sprintf("```css\n%shelp 명령어```", utils.Prefix)},
 		},
 	)
 }

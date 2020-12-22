@@ -2,7 +2,7 @@ package events
 
 import (
 	"fmt"
-	"io/ioutil"
+	"strings"
 
 	"github.com/TeamZenithy/Araha/initializer"
 	"github.com/TeamZenithy/Araha/logger"
@@ -12,16 +12,13 @@ import (
 
 //Ready get discord bot's ready events
 func Ready(session *discordgo.Session, event *discordgo.Ready) {
-	rawConfig, errFindConfigFile := ioutil.ReadFile("config.toml") // just pass the file name
-	if errFindConfigFile != nil {
-		logger.Panic(fmt.Sprintf("Error while load config file: %v", errFindConfigFile.Error()))
-		return
+	if strings.Contains(utils.Prefix, " ") {
+		logger.Panic("Space in prefix is not allowed. Please remove space.")
 	}
-	prefix, errLoadConfigData := utils.GetPrefix(string(rawConfig))
-	if errLoadConfigData != nil {
-		logger.Panic(fmt.Sprintf("Error while load config data: %v", errLoadConfigData.Error()))
-	}
-	var err = session.UpdateStatus(0, fmt.Sprintf("%shelp", prefix))
+
+	logger.Info(fmt.Sprintf("Prefix set to '%s'", utils.Prefix))
+
+	var err = session.UpdateStatus(0, fmt.Sprintf("%shelp", utils.Prefix))
 	if err != nil {
 		logger.Warn(fmt.Sprintf("Error updating status: %s", err.Error()))
 	}

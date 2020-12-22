@@ -1,9 +1,6 @@
 package initializer
 
 import (
-	"fmt"
-	"io/ioutil"
-
 	audioengine "github.com/TeamZenithy/Araha/engine/audio"
 	"github.com/TeamZenithy/Araha/logger"
 	"github.com/TeamZenithy/Araha/model"
@@ -13,16 +10,8 @@ import (
 
 //InitAudioEngine initialize lavalink client
 func InitAudioEngine(event *discordgo.Ready) {
-	rawConfig, errFindConfigFile := ioutil.ReadFile("config.toml") // just pass the file name
-	if errFindConfigFile != nil {
-		logger.Fatal(fmt.Sprintf("Error while load config file: %s", errFindConfigFile.Error()))
-		return
-	}
 	utils.Lavalink = audioengine.NewLavalink("1", event.User.ID)
-	host, port, pass, errLoadConfigData := utils.GetLavalinkConfig(string(rawConfig))
-	if errLoadConfigData != nil {
-		logger.Fatal(fmt.Sprintf("Error while load config data: %s", errLoadConfigData.Error()))
-	}
+	host, port, pass := utils.LavalinkConfig[0], utils.LavalinkConfig[1], utils.LavalinkConfig[2]
 
 	err := utils.Lavalink.AddNodes(audioengine.NodeConfig{
 		REST:      "http://" + host + ":" + port,

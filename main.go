@@ -20,12 +20,9 @@ func main() {
 		logger.Fatal(fmt.Sprintf("Error while load config file: %s", errFindConfigFile.Error()))
 		return
 	}
-	token, errLoadConfigData := utils.GetToken(string(rawConfig))
-	if errLoadConfigData != nil {
-		logger.Fatal(fmt.Sprintf("Error while load config data: %s", errLoadConfigData.Error()))
-	}
+	utils.LoadConfig(string(rawConfig))
 
-	var bot, err = discordgo.New("Bot " + token)
+	var bot, err = discordgo.New("Bot " + utils.Token)
 	// register events
 	bot.AddHandler(events.Ready)
 	bot.AddHandler(events.MessageCreate)

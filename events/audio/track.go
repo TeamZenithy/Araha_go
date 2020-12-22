@@ -44,6 +44,9 @@ func (h *EventHandlerManager) OnTrackEnd(player *audioengine.Player, track strin
 
 //OnTrackException handles track exception event for lavalink
 func (h *EventHandlerManager) OnTrackException(player *audioengine.Player, track string, reason string) (err error) {
+	if (reason == "") {
+		reason = "Lavalink Fail"
+	}
 	logger.Error(fmt.Sprintf("(audioEngine) Track exception for %s: %s", player.GuildID(), reason))
 	if ms, ok := model.Music[player.GuildID()]; ok {
 		ms.SongEnd <- reason
