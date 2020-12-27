@@ -7,6 +7,7 @@ import (
 
 	audioengine "github.com/TeamZenithy/Araha/engine/audio"
 	"github.com/TeamZenithy/Araha/handler"
+	"github.com/TeamZenithy/Araha/logger"
 	"github.com/TeamZenithy/Araha/model"
 	"github.com/TeamZenithy/Araha/utils"
 	"github.com/bwmarrin/discordgo"
@@ -21,7 +22,7 @@ func Initialize() {
 			Aliases:              []string{"p"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_MUSIC,
-			Usage:                map[string]string{"필요한 권한": "**``음성 채널 발언권``**", "설명": "``요청된 이름의 노래 또는 링크를 검색해서 음원을 재생합니다.``", "사용법": fmt.Sprintf("```css\n%splay 노래 이름 또는 링크```", utils.Prefix)},
+			Usage:                map[string]string{"Required Permission": "**``SPEAK``**", "Description": "``Search for the requested song title or link to play the song.``", "Usage": fmt.Sprintf("```css\n%splay [song title or link]```", utils.Prefix)},
 		},
 	)
 }
@@ -37,7 +38,7 @@ func run(ctx handler.CommandContext) error {
 		return nil
 	}
 
-	query := strings.Replace(strings.Join(strings.Split(ctx.Message.Content, " ")[1:], " "), " ", "%20", -1)
+	query := ctx.Arguments[commandArg]
 	if query == "" {
 		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Please provide a url or search query.")
 		return nil
@@ -52,6 +53,21 @@ func run(ctx handler.CommandContext) error {
 	if userVoiceState.UserID == "" {
 		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "You are not in a voice channel.")
 		return nil
+	}
+
+	node, err := utils.Lavalink.BestNode()
+	var tracks *audioengine.Tracks
+	var errLoadTracks error
+
+	if strings.HasPrefix(query, "http") && strings.Contains(query, "://") {
+		query = strings.ReplaceAll(query, " ", "%20")
+		if strings.Contains(query, "twitch.tv") {
+			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "I'm sorry. It's not good to watch Twitch using a bot. Please use the browser instead of me.")
+			return nil
+		}
+		tracks, errLoadTracks = node.LoadTracks(utils.QUERY_TYPE_URL, query)
+	} else {
+		tracks, errLoadTracks = node.LoadTracks(utils.QUERY_TYPE_YOUTUBE, query)
 	}
 
 	var ms *model.MusicStruct
@@ -89,19 +105,11 @@ func run(ctx handler.CommandContext) error {
 		}
 	}
 
-	node, err := utils.Lavalink.BestNode()
 	if err != nil {
 		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Error finding music node. Please try again.\n"+err.Error())
 		return nil
 	}
 
-	var tracks *audioengine.Tracks
-	var errLoadTracks error
-	if !strings.HasPrefix(query, "http") && !strings.Contains(query, "://") {
-		tracks, errLoadTracks = node.LoadTracks(utils.QUERY_TYPE_YOUTUBE, query)
-	} else {
-		tracks, errLoadTracks = node.LoadTracks(utils.QUERY_TYPE_URL, query)
-	}
 	if errLoadTracks != nil {
 		_, errLoadTracks = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Error with query. Please try again or try a different query.\n"+err.Error())
 		return nil
@@ -117,38 +125,48 @@ func run(ctx handler.CommandContext) error {
 		}
 	}
 
-	track := tracks.Tracks[0]
-	err = queueSong(ctx, track, ms)
-	if err != nil {
-		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Error adding song to queue. Please try again.\n"+err.Error())
-		return nil
+	if tracks.Type == audioengine.PlaylistLoaded {
+		for pos := range tracks.Tracks {
+			errLoadTracks := queueSong(ctx, tracks.Tracks[pos], ms, len(tracks.Tracks))
+			if errLoadTracks != nil {
+				logger.Warn(errLoadTracks.Error())
+				ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Error adding songs to queue. Please try again.\n"+errLoadTracks.Error())
+				return nil
+			}
+		}
+		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, fmt.Sprintf("Queued **%d** songs...", len(tracks.Tracks)))
+	} else {
+		track := tracks.Tracks[0]
+		err = queueSong(ctx, track, ms, 1)
+		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, fmt.Sprintf("Queued for playback: **%s**", track.Info.Title))
+		if err != nil {
+			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Error adding song to queue. Please try again.\n"+err.Error())
+			return nil
+		}
 	}
 
 	return nil
 }
 
-func queueSong(ctx handler.CommandContext, track audioengine.Track, ms *model.MusicStruct) (err error) {
+func queueSong(ctx handler.CommandContext, track audioengine.Track, ms *model.MusicStruct, length int) (err error) {
 	justJoined := false
 	if len(ms.Queue) == 0 {
 		justJoined = true
 	}
 
 	ms.Queue = append(ms.Queue, model.Song{
-		Requester: ctx.Message.Author.Username,
+		Requester: fmt.Sprintf("%s#%s", ctx.Message.Author.Username, ctx.Message.Author.Discriminator),
 		Track:     track,
 	})
 
 	if justJoined {
 		<-ms.PlayerCreated
-		err = playSong(ctx, ms.Queue[0], ms, -1)
+		go playSong(ctx, ms.Queue[0], ms, -1)
 		if err != nil {
 			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "An error occured during song playback. Please try again.\n"+err.Error())
 			return
 		}
-	} else {
-		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Queued for playback: **"+track.Info.Title+"**")
 	}
-
 	return
 }
 

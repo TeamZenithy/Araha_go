@@ -1,8 +1,9 @@
-package skip
+package shuffle
 
 import (
 	"fmt"
-	"math"
+	"math/rand"
+	"time"
 
 	"github.com/TeamZenithy/Araha/handler"
 	"github.com/TeamZenithy/Araha/model"
@@ -15,16 +16,15 @@ func Initialize() {
 		handler.Command{
 			Run:                  run,
 			Name:                 commandName,
-			Aliases:              []string{"s"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_MUSIC,
-			Usage:                map[string]string{"Required Permission": "**``SPEAK``**", "Description": "``Skip current song``", "Usage": fmt.Sprintf("```css\n%sskip```", utils.Prefix)},
+			Usage:                map[string]string{"Required Permission": "**``SPEAK``**", "Description": "``Shuffle the queue``", "Usage": fmt.Sprintf("```css\n%sshuffle```", utils.Prefix)},
 		},
 	)
 }
 
 const (
-	commandName = "skip"
+	commandName = "shuffle"
 	commandArg  = "none"
 )
 
@@ -40,15 +40,14 @@ func run(ctx handler.CommandContext) error {
 			return nil
 		}
 
-		usersInVoice := math.Floor(float64(utils.GetUsersInVoice(guild) / 2))
-		skips := ms.Queue[0].Skips
-		requirement := (skips + 1) / float64(usersInVoice)
-		if usersInVoice <= 2 || requirement >= 0.4 {
-			ms.Player.Stop()
-		} else {
-			skips++
-			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, fmt.Sprintf("Vote added! Need %d more (%d/%d).", int(usersInVoice-skips), int(skips), int(usersInVoice)))
-		}
+		queue := ms.Queue[1:]
+		rand.Seed(time.Now().UnixNano())
+		rand.Shuffle(len(queue), func(i, j int) {
+			queue[i], queue[j] = queue[j], queue[i]
+		})
+		queue = append([]model.Song{ms.Queue[0]}, queue...)
+		ms.Queue = queue
+		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Shuffled queue.")
 	} else {
 		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "There is no music playing.")
 	}

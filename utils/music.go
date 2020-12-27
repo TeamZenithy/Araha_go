@@ -30,7 +30,7 @@ func IsInVoiceWithMusic(guild *discordgo.Guild, userID string) bool {
 
 // LeaveAndDestroy leaves the voice channel and destroys the player and queue
 func LeaveAndDestroy(s *discordgo.Session, guildID string) string {
-	player := model.Music[guildID].Player
+	player := Player
 	delete(model.Music, guildID)
 	if err := player.Destroy(); err != nil {
 		return fmt.Sprintf("Error destroying player for %s: %s", guildID, err)

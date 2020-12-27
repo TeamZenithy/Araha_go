@@ -17,14 +17,14 @@ func Initialize() {
 			Aliases:              []string{"pong"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_GENERAL,
-			Usage:                map[string]string{"필요한 권한": "**``없음``**", "설명": "``봇이 살아있나 확인합니다.``", "사용법": fmt.Sprintf("```css\n%sping```", utils.Prefix)},
+			Usage:                map[string]string{"Required Permission": "**``none``**", "Description": "``Check ping of bot.``", "Usage": fmt.Sprintf("```css\n%sping```", utils.Prefix)},
 		},
 	)
 }
 
 const (
 	commandName = "ping"
-	commandArg  = "없음"
+	commandArg  = "none"
 )
 
 func run(ctx handler.CommandContext) error {

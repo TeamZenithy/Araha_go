@@ -17,11 +17,11 @@ type Lavalink struct {
 var (
 	errNoNodes          = errors.New("No nodes present")
 	errNodeNotFound     = errors.New("Couldn't find that node")
-	errPlayerNotFound   = errors.New("Couldn't find a player for that guild")
+	errPlayerNotFound   = errors.New("Couldn't find a player for that guild. Or leaved voice channel")
 	errVolumeOutOfRange = errors.New("Volume is out of range, must be within [0, 1000]")
 	errInvalidVersion   = errors.New("This library requires Lavalink >= 3")
 	errUnknownPayload   = errors.New("Lavalink sent an unknown payload")
-	errNilHandler       = errors.New("You must provide an event handler. Use gavalink.DummyEventHandler if you wish to ignore events")
+	errNilHandler       = errors.New("You must provide an event handler. Use audioengine.DummyEventHandler if you wish to ignore events")
 )
 
 // NewLavalink creates a new Lavalink manager

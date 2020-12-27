@@ -18,14 +18,14 @@ func Initialize() {
 			Aliases:              []string{"h", "guide", "manual"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_GENERAL,
-			Usage:                map[string]string{"필요한 권한": "**``없음``**", "설명": "``모든 명령어의 도움말을 표시합니다.``", "사용법": fmt.Sprintf("```css\n%shelp 명령어```", utils.Prefix)},
+			Usage:                map[string]string{"Required Permission": "**``none``**", "Description": "``모든 명령어의 도움말을 표시합니다.``", "Usage": fmt.Sprintf("```css\n%shelp [command]```", utils.Prefix)},
 		},
 	)
 }
 
 const (
 	commandName = "help"
-	commandArg  = "명령어"
+	commandArg  = "Command"
 )
 
 func run(ctx handler.CommandContext) error {
@@ -44,7 +44,7 @@ func run(ctx handler.CommandContext) error {
 
 			formattedCommandNames = append(
 				formattedCommandNames,
-				fmt.Sprint(">>> 명령어: `", command.Name, "`"))
+				fmt.Sprint(">>> Command: `", command.Name, "`"))
 
 			var formattedRequiredArgumentType []string
 
@@ -57,7 +57,7 @@ func run(ctx handler.CommandContext) error {
 			var formattedCommandAliases []string
 
 			if formattedCommandAliases == nil || len(command.Aliases) == 1 && command.Aliases[0] == "" {
-				formattedCommandAliases = append(formattedCommandAliases, fmt.Sprint("`없음`"))
+				formattedCommandAliases = append(formattedCommandAliases, fmt.Sprint("`none`"))
 			} else {
 				for _, value := range command.Aliases {
 					formattedCommandAliases = append(formattedCommandAliases, fmt.Sprint("`", value, "`"))
@@ -75,18 +75,18 @@ func run(ctx handler.CommandContext) error {
 			var _, err = ctx.Message.Reply(
 				fmt.Sprint(
 					strings.Join(formattedCommandNames, ", "),
-					"\n별칭: ",
+					"\nAlias: ",
 					strings.Join(formattedCommandAliases, ", "),
-					"\n필요로 하는 인자: ",
+					"\nRequired Argument(s): ",
 					strings.Join(formattedRequiredArgumentType, ", "),
 					"\n",
 					strings.Join(formattedUsage, "")))
 			return err
 		}
-		var _, err = ctx.Message.Reply("해당 명령어를 찾을 수 없습니다!")
+		var _, err = ctx.Message.Reply("The command was not found!")
 		return err
 	}
-	var outputStr = ">>> 명령어 목록:\n"
+	var outputStr = ">>> List of commands:\n"
 	for commandName := range handler.Commands {
 		outputStr += fmt.Sprint("`", commandName, "`, ")
 	}

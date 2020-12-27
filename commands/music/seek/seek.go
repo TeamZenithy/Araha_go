@@ -1,8 +1,8 @@
-package skip
+package seek
 
 import (
 	"fmt"
-	"math"
+	"strconv"
 
 	"github.com/TeamZenithy/Araha/handler"
 	"github.com/TeamZenithy/Araha/model"
@@ -15,17 +15,16 @@ func Initialize() {
 		handler.Command{
 			Run:                  run,
 			Name:                 commandName,
-			Aliases:              []string{"s"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_MUSIC,
-			Usage:                map[string]string{"Required Permission": "**``SPEAK``**", "Description": "``Skip current song``", "Usage": fmt.Sprintf("```css\n%sskip```", utils.Prefix)},
+			Usage:                map[string]string{"Required Permission": "**``SPEAK``**", "Description": "``Navigate to the requested location of the song that is currently playing.``", "Usage": fmt.Sprintf("```css\n%sseek [second]```", utils.Prefix)},
 		},
 	)
 }
 
 const (
-	commandName = "skip"
-	commandArg  = "none"
+	commandName = "seek"
+	commandArg  = "second"
 )
 
 func run(ctx handler.CommandContext) error {
@@ -39,16 +38,18 @@ func run(ctx handler.CommandContext) error {
 			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "You're not listening to my music :(")
 			return nil
 		}
-
-		usersInVoice := math.Floor(float64(utils.GetUsersInVoice(guild) / 2))
-		skips := ms.Queue[0].Skips
-		requirement := (skips + 1) / float64(usersInVoice)
-		if usersInVoice <= 2 || requirement >= 0.4 {
-			ms.Player.Stop()
-		} else {
-			skips++
-			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, fmt.Sprintf("Vote added! Need %d more (%d/%d).", int(usersInVoice-skips), int(skips), int(usersInVoice)))
+		pos, errNotSecond := strconv.Atoi(ctx.Arguments[commandArg])
+		pos = pos * 1000
+		if errNotSecond != nil || pos < 0 {
+			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Please give me valid time")
+			return nil
 		}
+		if ms.Queue[0].Track.Info.Length <= pos {
+			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Requested time is same with song or longer")
+			return nil
+		}
+		ms.Player.Seek(pos)
+		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, fmt.Sprintf(":stopwatch: Moved to %s.", ctx.Arguments[commandArg]))
 	} else {
 		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "There is no music playing.")
 	}

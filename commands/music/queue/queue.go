@@ -18,14 +18,14 @@ func Initialize() {
 			Aliases:              []string{"q"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_MUSIC,
-			Usage:                map[string]string{"필요한 권한": "**``음성 채널 발언권``**", "설명": "``재생 대기열을 보여줍니다.``", "사용법": fmt.Sprintf("```css\n%squeue```", utils.Prefix)},
+			Usage:                map[string]string{"Required Permission": "**``SPEAK``**", "Description": "``Shows current queue``", "Usage": fmt.Sprintf("```css\n%squeue```", utils.Prefix)},
 		},
 	)
 }
 
 const (
 	commandName = "queue"
-	commandArg  = "없음"
+	commandArg  = "none"
 )
 
 func run(ctx handler.CommandContext) error {
@@ -47,8 +47,19 @@ func run(ctx handler.CommandContext) error {
 	ms, ok := model.Music[ctx.Message.GuildID]
 	if ok && len(ms.Queue) > 0 {
 		res := ""
-		for i, song := range ms.Queue {
-			res += fmt.Sprintf("\n**%d: **%s", i+1, song.Track.Info.Title)
+		length := 5
+		if len(ms.Queue) < 5 {
+			length = 5 - (5 - len(ms.Queue))
+		}
+		for i, song := range ms.Queue[:length] {
+			if i == 0 {
+				res += fmt.Sprintf("\n**%d: **%s - (Now Playing)", i+1, song.Track.Info.Title)
+			} else {
+				res += fmt.Sprintf("\n**%d: **%s", i+1, song.Track.Info.Title)
+			}
+		}
+		if len(ms.Queue) > 5 {
+			res += fmt.Sprintf("\n\nAnd **%d** song(s) more in queue", len(ms.Queue)-5)
 		}
 		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Song queue:\n"+res)
 	} else {

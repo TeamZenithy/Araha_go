@@ -17,14 +17,14 @@ func Initialize() {
 			Aliases:              []string{"wai"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_GENERAL,
-			Usage:                map[string]string{"필요한 권한": "**``없음``**", "설명": "``자신이 누구인지 확인합니다.``", "사용법": fmt.Sprintf("```css\n%swhoami```", utils.Prefix)},
+			Usage:                map[string]string{"Required Permission": "**``none``**", "Description": "``Check your permission``", "Usage": fmt.Sprintf("```css\n%swhoami```", utils.Prefix)},
 		},
 	)
 }
 
 const (
 	commandName = "whoami"
-	commandArg  = "없음"
+	commandArg  = "none"
 )
 
 func run(ctx handler.CommandContext) error {
