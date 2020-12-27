@@ -22,7 +22,7 @@ func Initialize() {
 			Aliases:              []string{"p"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_MUSIC,
-			Usage:                map[string]string{"Required Permission": "**``SPEAK``**", "Description": "``Search for the requested song title or link to play the song.``", "Usage": fmt.Sprintf("```css\n%splay [song title or link]```", utils.Prefix)},
+			Usage:                map[string]string{"Required Permission": "**``SPEAK``**", "Description": "``Search for the requested song title or link to play the song.\nIf you want search song on soudcloud, then include ''$soundcloud'' in message.``", "Usage": fmt.Sprintf("```css\n%splay [song title or link]```\n```css\n%splay [song name] --soundcloud```", utils.Prefix, utils.Prefix)},
 		},
 	)
 }
@@ -58,7 +58,6 @@ func run(ctx handler.CommandContext) error {
 	node, err := utils.Lavalink.BestNode()
 	var tracks *audioengine.Tracks
 	var errLoadTracks error
-
 	if strings.HasPrefix(query, "http") && strings.Contains(query, "://") {
 		query = strings.ReplaceAll(query, " ", "%20")
 		if strings.Contains(query, "twitch.tv") {
@@ -66,6 +65,9 @@ func run(ctx handler.CommandContext) error {
 			return nil
 		}
 		tracks, errLoadTracks = node.LoadTracks(utils.QUERY_TYPE_URL, query)
+	} else if strings.Contains(query, "$soundcloud") {
+		query = strings.Replace(query, "$soundcloud", "", -1)
+		tracks, errLoadTracks = node.LoadTracks(utils.QUERY_TYPE_SOUNDCLOUD, query)
 	} else {
 		tracks, errLoadTracks = node.LoadTracks(utils.QUERY_TYPE_YOUTUBE, query)
 	}
@@ -155,7 +157,7 @@ func queueSong(ctx handler.CommandContext, track audioengine.Track, ms *model.Mu
 	}
 
 	ms.Queue = append(ms.Queue, model.Song{
-		Requester: fmt.Sprintf("%s#%s", ctx.Message.Author.Username, ctx.Message.Author.Discriminator),
+		Requester: ctx.Message.Author.ID,
 		Track:     track,
 	})
 
@@ -180,7 +182,10 @@ func playSong(ctx handler.CommandContext, song model.Song, ms *model.MusicStruct
 		}
 		return
 	}
-	_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, fmt.Sprintf(":musical_note: Now playing: **%s** *(requested by %s)*", song.Track.Info.Title, song.Requester))
+	user, _ := ctx.Session.User(song.Requester)
+	username := user.Username
+	discriminator := user.Discriminator
+	_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, fmt.Sprintf(":musical_note: Now playing: **%s** *(requested by %s)*", song.Track.Info.Title, fmt.Sprintf("%s#%s", username, discriminator)))
 
 	end := <-ms.SongEnd
 	if end == "next" {

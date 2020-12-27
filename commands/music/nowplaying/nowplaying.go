@@ -48,6 +48,7 @@ func run(ctx handler.CommandContext) error {
 	}
 	ms, ok := model.Music[ctx.Message.GuildID]
 	if ok && len(ms.Queue) > 0 {
+		user, _ := ctx.Session.User(ms.Queue[0].Requester)
 		var imgURL = ""
 		if strings.Contains(ms.Queue[0].Track.Info.URI, "youtube.com") || strings.Contains(ms.Queue[0].Track.Info.URI, "yt.be") {
 			imgURL, _ = utils.GetYTThumbnail(ms.Queue[0].Track.Info.URI)
@@ -61,7 +62,7 @@ func run(ctx handler.CommandContext) error {
 			Fields:      []*discordgo.MessageEmbedField{},
 			Timestamp:   time.Now().Format(time.RFC3339),
 			Thumbnail:   &discordgo.MessageEmbedThumbnail{URL: imgURL, Width: 1280, Height: 720},
-			Footer:      &discordgo.MessageEmbedFooter{Text: fmt.Sprintf("Requested by %s", ms.Queue[0].Requester)},
+			Footer:      &discordgo.MessageEmbedFooter{Text: fmt.Sprintf("Requested by %s#%s", user.Username, user.Discriminator), IconURL: user.AvatarURL("")},
 		}
 		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
 			Name:   "Duration",
@@ -69,8 +70,8 @@ func run(ctx handler.CommandContext) error {
 			Inline: true,
 		})
 		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
-			Name:   "Duration",
-			Value:  strings.Replace(strings.Replace(strings.Replace(time.Until(time.Now().Add(time.Duration(ms.Queue[0].Track.Info.Length)*time.Millisecond)).Round(time.Second).String(), "h", "h ", -1), "m", "m ", -1), "s", "s ", -1),
+			Name:   "ETA",
+			Value:  strings.Replace(strings.Replace(strings.Replace(time.Until(time.Now().Add(time.Duration(ms.Queue[0].Track.Info.Length-ms.Player.Position())*time.Millisecond)).Round(time.Second).String(), "h", "h ", -1), "m", "m ", -1), "s", "s ", -1),
 			Inline: true,
 		})
 		_, err = ctx.Session.ChannelMessageSendEmbed(ctx.Message.ChannelID, embed)
