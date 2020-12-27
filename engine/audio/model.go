@@ -48,8 +48,8 @@ type TrackInfo struct {
 	URI        string `json:"uri"`
 	Seekable   bool   `json:"isSeekable"`
 	Stream     bool   `json:"isStream"`
-	Length     int    `json:"length"`
-	Position   int    `json:"position"`
+	Length     int64  `json:"length"`
+	Position   int64  `json:"position"`
 }
 
 const (
@@ -77,7 +77,7 @@ type message struct {
 	StartTime   string             `json:"startTime,omitempty"`
 	EndTime     string             `json:"endTime,omitempty"`
 	Pause       *bool              `json:"pause,omitempty"`
-	Position    *int               `json:"position,omitempty"`
+	Position    *int64             `json:"position,omitempty"`
 	Volume      *int               `json:"volume,omitempty"`
 	State       *state             `json:"state,omitempty"`
 	Type        string             `json:"type,omitempty"`
@@ -89,8 +89,8 @@ type message struct {
 }
 
 type state struct {
-	Time     int `json:"time"`
-	Position int `json:"position"`
+	Time     int64 `json:"time"`
+	Position int64 `json:"position"`
 }
 
 type statCPU struct {

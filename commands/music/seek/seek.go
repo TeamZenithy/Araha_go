@@ -44,11 +44,11 @@ func run(ctx handler.CommandContext) error {
 			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Please give me valid time")
 			return nil
 		}
-		if ms.Queue[0].Track.Info.Length <= pos {
+		if ms.Queue[0].Track.Info.Length <= int64(pos) {
 			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Requested time is same with song or longer")
 			return nil
 		}
-		ms.Player.Seek(pos)
+		ms.Player.Seek(int64(pos))
 		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, fmt.Sprintf(":stopwatch: Moved to %s.", ctx.Arguments[commandArg]))
 	} else {
 		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "There is no music playing.")

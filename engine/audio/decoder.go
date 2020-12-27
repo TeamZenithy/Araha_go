@@ -106,7 +106,7 @@ func Decode(r io.Reader) (*TrackInfo, error) {
 		Author:     author,
 		URI:        url,
 		Stream:     stream == 1,
-		Length:     int(length),
+		Length:     int64(length),
 	}
 
 	return track, nil

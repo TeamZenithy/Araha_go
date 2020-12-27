@@ -10,8 +10,8 @@ import (
 // Player is a Lavalink player
 type Player struct {
 	guildID  string
-	time     int
-	position int
+	time     int64
+	position int64
 	paused   bool
 	vol      int
 	track    string
@@ -98,7 +98,7 @@ func (player *Player) Paused() bool {
 }
 
 // Seek will seek the player to the speicifed position, in millis
-func (player *Player) Seek(position int) error {
+func (player *Player) Seek(position int64) error {
 	msg := message{
 		Op:       opSeek,
 		GuildID:  player.guildID,
@@ -113,7 +113,7 @@ func (player *Player) Seek(position int) error {
 }
 
 // Position returns the player's position, as reported by Lavalink
-func (player *Player) Position() int {
+func (player *Player) Position() int64 {
 	return player.position
 }
 

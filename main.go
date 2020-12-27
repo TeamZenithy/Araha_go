@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	_ "net/http/pprof"
 	"os"
 	"os/signal"
 	"syscall"
@@ -10,8 +11,8 @@ import (
 	"github.com/TeamZenithy/Araha/events"
 	"github.com/TeamZenithy/Araha/initializer"
 	"github.com/TeamZenithy/Araha/logger"
+	"github.com/TeamZenithy/Araha/sharder"
 	"github.com/TeamZenithy/Araha/utils"
-	"github.com/bwmarrin/discordgo"
 )
 
 func main() {
@@ -22,24 +23,35 @@ func main() {
 	}
 	utils.LoadConfig(string(rawConfig))
 
-	var bot, err = discordgo.New("Bot " + utils.Token)
+	manager := sharder.New("Bot " + utils.Token)
+	manager.Name = "Araha"
+	manager.LogChannel = utils.ShardLogChannel
+	manager.StatusMessageChannel = utils.ShardStatusLogChannel
 	// register events
-	bot.AddHandler(events.Ready)
-	bot.AddHandler(events.MessageCreate)
-	bot.AddHandler(events.VoiceServerUpdate)
-	bot.AddHandler(events.VoiceStateUpdate)
+	manager.AddHandler(events.Ready)
+	manager.AddHandler(events.MessageCreate)
+	manager.AddHandler(events.VoiceServerUpdate)
+	manager.AddHandler(events.VoiceStateUpdate)
 
-	initializer.InitCommands()
-	logger.Info("Trying to log in...")
-	err = bot.Open()
-
+	recommended, err := manager.GetRecommendedCount()
 	if err != nil {
-		logger.Fatal(fmt.Sprintf("Error opening Discord session: %v", err))
+		logger.Fatal("Failed getting recommended shard count")
+	}
+	if recommended < 2 {
+		manager.SetNumShards(5)
+	}
+
+	logger.Info("Starting the shard manager")
+	manager.Init()
+	initializer.InitCommands()
+
+	if err := manager.Start(); err != nil {
+		logger.Fatal(fmt.Sprintf("Failed to start: %s", err.Error()))
 	}
 
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
 
-	bot.Close()
+	manager.StopAll()
 }

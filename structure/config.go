@@ -2,10 +2,12 @@ package structure
 
 //Config for discord bot.
 type Config struct {
-	Prefix       string
-	Token        string
-	Owners       []string
-	LavalinkHost string
-	LavalinkPort string
-	LavalinkPass string
+	Prefix                string
+	Token                 string
+	Owners                []string
+	ShardLogChannel       string
+	ShardStatusLogChannel string
+	LavalinkHost          string
+	LavalinkPort          string
+	LavalinkPass          string
 }

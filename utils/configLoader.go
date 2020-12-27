@@ -16,10 +16,14 @@ func LoadConfig(rawConfig string) {
 		Token = ""
 		Prefix = ""
 		Owners = make([]string, 0)
+		ShardLogChannel = ""
+		ShardStatusLogChannel = ""
 		LavalinkConfig = make([]string, 0)
 	}
 	Token = config.Token
 	Prefix = config.Prefix
 	Owners = config.Owners
+	ShardLogChannel = config.ShardLogChannel
+	ShardStatusLogChannel = config.ShardStatusLogChannel
 	LavalinkConfig = []string{config.LavalinkHost, config.LavalinkPort, config.LavalinkPass}
 }

@@ -16,7 +16,6 @@ func GetYTThumbnail(urlVideo string) (string, error) {
 	const (
 		vi     = "https://i.ytimg.com/vi/"
 		resMax = "/maxresdefault.jpg"
-		resHQ  = "/hqdefault.jpg"
 	)
 
 	equalIndex := strings.Index(urlVideo, "=")

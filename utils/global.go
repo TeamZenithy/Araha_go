@@ -11,6 +11,12 @@ var Token string = ""
 //Owners for global
 var Owners []string = []string{""}
 
+//ShardLogChannel for global
+var ShardLogChannel = ""
+
+//ShardStatusLogChannel for global
+var ShardStatusLogChannel = ""
+
 //LavalinkConfig for global
 var LavalinkConfig []string = []string{""}
 
