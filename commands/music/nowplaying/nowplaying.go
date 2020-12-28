@@ -43,7 +43,7 @@ func run(ctx handler.CommandContext) error {
 		}
 	}
 	if userVoiceState.UserID == "" {
-		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "You are not in a voice channel.")
+		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("NotInVoiceChannel"))
 		return nil
 	}
 	ms, ok := model.Music[ctx.Message.GuildID]

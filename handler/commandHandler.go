@@ -4,6 +4,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/TeamZenithy/Araha/utils"
+
+	"github.com/TeamZenithy/Araha/db"
+
 	"github.com/TeamZenithy/Araha/extensions/objects"
 
 	"github.com/bwmarrin/discordgo"
@@ -27,6 +31,7 @@ type CommandContext struct {
 	Session   *discordgo.Session
 	Message   *objects.ExtendedMessage
 	Arguments map[string]string
+	T         func(string, ...string) string
 }
 
 //Command includes Run(function), Name(list of srings), Required args type(list of strings), and Usage(map of string and string)
@@ -93,31 +98,44 @@ func HandleCreatedMessage(session *discordgo.Session, message *discordgo.Message
 	// var err = command.Run(context)
 
 	var err error = nil
+
+	gcommand := Command{}
+
 	if command, ok := Commands[commandName]; ok {
-		var context = CommandContext{
-			Session: session,
-			Message: objects.ExtendMessage(message.Message, session),
-			Arguments: parseArguments(
-				message.Content,
-				command.RequiredArgumentType,
-				command.Usage),
-		}
-		err = command.Run(context)
+		gcommand = command
+	} else if command, ok := Aliases[commandName]; ok {
+		gcommand = Commands[command]
+	} else {
 		return
 	}
 
-	if command, ok := Aliases[commandName]; ok {
-		var context = CommandContext{
-			Session: session,
-			Message: objects.ExtendMessage(message.Message, session),
-			Arguments: parseArguments(
-				message.Content,
-				Commands[command].RequiredArgumentType,
-				Commands[command].Usage),
-		}
-		err = Commands[command].Run(context)
+	userLocale := ""
+	l, err := db.FindUserLocale(message.Author.ID)
+	if err != nil {
+		// TODO: Send Log
 		return
+	} else if l == "" {
+		l, err := db.FindGuildLocale(message.GuildID)
+		if err != nil {
+			// TODO: Send Log
+			return
+		}
+		userLocale = l
+	} else {
+		userLocale = l
 	}
+
+	context := CommandContext{
+		Session: session,
+		Message: objects.ExtendMessage(message.Message, session),
+		Arguments: parseArguments(
+			message.Content,
+			gcommand.RequiredArgumentType,
+			gcommand.Usage),
+		T: utils.TR.GetHandlerFunc(userLocale, "en"),
+	}
+
+	err = gcommand.Run(context)
 
 	if err != nil {
 		tracerr.PrintSourceColor(err)

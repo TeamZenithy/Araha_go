@@ -12,7 +12,7 @@ func FindGuildLocale(id string) (string, error) {
 	get := utils.RDB.Get(context.Background(), "guild:locale:"+id)
 	if err := get.Err(); err != nil {
 		if err == redis.Nil {
-			return "en", err
+			return "en", nil
 		}
 		return "", err
 	}
@@ -27,9 +27,9 @@ func FindUserLocale(id string) (string, error) {
 	get := utils.RDB.Get(context.Background(), "users:locale:"+id)
 	if err := get.Err(); err != nil {
 		if err == redis.Nil {
-			return "", err
+			return "", nil
 		}
-		panic(err)
+		return "", err
 	}
 	return get.Val(), nil
 }

@@ -8,5 +8,5 @@ import (
 func InitLang() {
 	tr := lang.NewTr()
 	tr.AddLang(lang.NewTrLocale("lang/ko"))
-	utils.TR = &tr
+	utils.TR = tr
 }

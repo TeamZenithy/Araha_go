@@ -85,3 +85,17 @@ func (t *Tr) GetHandlerFunc(lang, fallback string) func(string, ...string) strin
 		return trText
 	}
 }
+
+func validLocaleList() []string {
+	return []string{"en", "ko"}
+}
+
+func IsValidLocale(l string) bool {
+	list := validLocaleList()
+	for _, d := range list {
+		if d == l {
+			return true
+		}
+	}
+	return false
+}
