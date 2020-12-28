@@ -19,6 +19,9 @@ func LoadConfig(rawConfig string) {
 		ShardLogChannel = ""
 		ShardStatusLogChannel = ""
 		LavalinkConfig = make([]string, 0)
+		RedisHost = ""
+		RedisPort = ""
+		RedisPass = ""
 	}
 	Token = config.Token
 	Prefix = config.Prefix
@@ -26,4 +29,7 @@ func LoadConfig(rawConfig string) {
 	ShardLogChannel = config.ShardLogChannel
 	ShardStatusLogChannel = config.ShardStatusLogChannel
 	LavalinkConfig = []string{config.LavalinkHost, config.LavalinkPort, config.LavalinkPass}
+	RedisHost = config.RedisHost
+	RedisPort = config.RedisPort
+	RedisPass = config.RedisPass
 }

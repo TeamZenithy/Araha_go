@@ -1,6 +1,10 @@
 package utils
 
-import audioengine "github.com/TeamZenithy/Araha/engine/audio"
+import (
+	audioengine "github.com/TeamZenithy/Araha/engine/audio"
+	"github.com/TeamZenithy/Araha/lang"
+	"github.com/go-redis/redis/v8"
+)
 
 //Prefix for global
 var Prefix string = ""
@@ -20,11 +24,24 @@ var ShardStatusLogChannel = ""
 //LavalinkConfig for global
 var LavalinkConfig []string = []string{""}
 
+//RedisHost for global
+var RedisHost = ""
+
+//RedisPort for global
+var RedisPort = ""
+
+//RedisPass for global
+var RedisPass = ""
+
 //Lavalink is not type
 var Lavalink *audioengine.Lavalink
 
 //Player is not type
 var Player *audioengine.Player
+
+var RDB *redis.Client
+
+var TR *lang.Tr
 
 const (
 	//QUERY_TYPE_YOUTUBE is for ytsearch

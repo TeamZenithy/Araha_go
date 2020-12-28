@@ -10,4 +10,7 @@ type Config struct {
 	LavalinkHost          string
 	LavalinkPort          string
 	LavalinkPass          string
+	RedisHost             string
+	RedisPort             string
+	RedisPass             string
 }

@@ -13,6 +13,7 @@ import (
 	"github.com/TeamZenithy/Araha/logger"
 	"github.com/TeamZenithy/Araha/sharder"
 	"github.com/TeamZenithy/Araha/utils"
+	"github.com/TeamZenithy/Araha/web"
 )
 
 func main() {
@@ -22,6 +23,10 @@ func main() {
 		return
 	}
 	utils.LoadConfig(string(rawConfig))
+
+	initializer.InitLang()
+
+	go web.InitWeb()
 
 	manager := sharder.New("Bot " + utils.Token)
 	manager.Name = "Araha"
