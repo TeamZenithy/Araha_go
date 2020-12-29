@@ -1,4 +1,4 @@
-package ping
+package locale
 
 import (
 	"fmt"
@@ -16,10 +16,10 @@ func Initialize() {
 		handler.Command{
 			Run:                  run,
 			Name:                 commandName,
-			Aliases:              []string{"sl"},
+			Aliases:              []string{"locale", "setlocale"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_GENERAL,
-			Usage:                map[string]string{"Required Permission": "**``none``**", "Description": "``Set User's Language``", "Usage": fmt.Sprintf("```css\n%ssetlang (en | ko)```", utils.Prefix)},
+			Usage:                map[string]string{"Required Permission": "**``none``**", "Description": "``Set User or Guild's Language``", "Usage": fmt.Sprintf("```css\n%ssetlang [--user | --guild] (en | ko)```", utils.Prefix)},
 		},
 	)
 }

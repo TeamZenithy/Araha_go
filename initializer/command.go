@@ -12,6 +12,7 @@ import (
 	"github.com/TeamZenithy/Araha/commands/music/skip"
 	"github.com/TeamZenithy/Araha/commands/music/stop"
 	"github.com/TeamZenithy/Araha/commands/music/volume"
+	"github.com/TeamZenithy/Araha/commands/setting/locale"
 	"github.com/TeamZenithy/Araha/handler"
 )
 
@@ -31,4 +32,5 @@ func InitCommands() {
 	volume.Initialize()
 	shuffle.Initialize()
 	nowplaying.Initialize()
+	locale.Initialize()
 }

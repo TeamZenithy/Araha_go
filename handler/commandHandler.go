@@ -44,6 +44,12 @@ type Command struct {
 	Usage                map[string]string
 }
 
+type Description struct {
+	ReqPermsission string
+	Description    string
+	Usage          string
+}
+
 //InitCommands Initialize the Commands map
 func InitCommands() {
 	Commands = make(map[string]Command)

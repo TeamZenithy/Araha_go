@@ -1,6 +1,7 @@
 package db
 
 import (
+	"github.com/TeamZenithy/Araha/logger"
 	"github.com/TeamZenithy/Araha/utils"
 	"github.com/go-redis/redis/v8"
 )
@@ -11,7 +12,7 @@ func InitRedis() {
 
 	opt, err := redis.ParseURL("redis://" + utils.RedisHost + ":" + utils.RedisPort + "")
 	if err != nil {
-		panic(err)
+		logger.Panic(err.Error())
 	}
 
 	opt.Password = utils.RedisPass

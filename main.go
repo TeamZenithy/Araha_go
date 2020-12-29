@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/TeamZenithy/Araha/db"
 	"github.com/TeamZenithy/Araha/events"
 	"github.com/TeamZenithy/Araha/initializer"
 	"github.com/TeamZenithy/Araha/logger"
@@ -25,6 +26,7 @@ func main() {
 	utils.LoadConfig(string(rawConfig))
 
 	initializer.InitLang()
+	db.InitRedis()
 
 	go web.InitWeb()
 
@@ -38,13 +40,15 @@ func main() {
 	manager.AddHandler(events.VoiceServerUpdate)
 	manager.AddHandler(events.VoiceStateUpdate)
 
-	recommended, err := manager.GetRecommendedCount()
-	if err != nil {
-		logger.Fatal("Failed getting recommended shard count")
-	}
-	if recommended < 2 {
-		manager.SetNumShards(5)
-	}
+	// !!!!!! Change this when release
+	// recommended, err := manager.GetRecommendedCount()
+	// if err != nil {
+	// 	logger.Fatal("Failed getting recommended shard count")
+	// }
+	// if recommended < 2 {
+	// 	manager.SetNumShards(5)
+	// }
+	manager.SetNumShards(1)
 
 	logger.Info("Starting the shard manager")
 	manager.Init()

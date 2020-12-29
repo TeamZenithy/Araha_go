@@ -57,7 +57,6 @@ func (t *Tr) AddLang(locale *TrLocale) {
 }
 
 func (t *Tr) GetHandlerFunc(lang, fallback string) func(string, ...string) string {
-
 	find := func(lang, file, key string) (string, bool) {
 		for _, d := range *t.TrTexts[lang].Transitions[file] {
 			if d.Name == key {

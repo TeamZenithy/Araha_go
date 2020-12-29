@@ -8,5 +8,6 @@ import (
 func InitLang() {
 	tr := lang.NewTr()
 	tr.AddLang(lang.NewTrLocale("lang/ko"))
+	tr.AddLang(lang.NewTrLocale("lang/en"))
 	utils.TR = tr
 }
