@@ -36,7 +36,7 @@ func run(ctx handler.CommandContext) error {
 		}
 
 		if isInVoice := utils.IsInVoiceWithMusic(guild, ctx.Message.Author.ID); !isInVoice {
-			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "You're not listening to my music :(")
+			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRNotPlaying"))
 			return nil
 		}
 
@@ -47,9 +47,9 @@ func run(ctx handler.CommandContext) error {
 		})
 		queue = append([]model.Song{ms.Queue[0]}, queue...)
 		ms.Queue = queue
-		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Shuffled queue.")
+		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:Shuffled"))
 	} else {
-		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "There is no music playing.")
+		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:NoMusic"))
 	}
 	return nil
 }

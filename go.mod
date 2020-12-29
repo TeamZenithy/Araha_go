@@ -13,4 +13,5 @@ require (
 	github.com/sirupsen/logrus v1.7.0
 	github.com/ztrue/tracerr v0.3.0
 	golang.org/x/net v0.0.0-20201224014010-6772e930b67b // indirect
+	gorm.io/gorm v1.20.9
 )

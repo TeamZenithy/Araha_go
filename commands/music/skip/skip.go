@@ -3,6 +3,7 @@ package skip
 import (
 	"fmt"
 	"math"
+	"strconv"
 
 	"github.com/TeamZenithy/Araha/handler"
 	"github.com/TeamZenithy/Araha/model"
@@ -36,7 +37,7 @@ func run(ctx handler.CommandContext) error {
 		}
 
 		if isInVoice := utils.IsInVoiceWithMusic(guild, ctx.Message.Author.ID); !isInVoice {
-			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "You're not listening to my music :(")
+			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRNotPlaying"))
 			return nil
 		}
 
@@ -47,10 +48,10 @@ func run(ctx handler.CommandContext) error {
 			ms.Player.Stop()
 		} else {
 			skips++
-			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, fmt.Sprintf("Vote added! Need %d more (%d/%d).", int(usersInVoice-skips), int(skips), int(usersInVoice)))
+			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:VoteAdded", strconv.Itoa(int(usersInVoice-skips)), strconv.Itoa(int(skips)), strconv.Itoa(int(usersInVoice))))
 		}
 	} else {
-		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "There is no music playing.")
+		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:NoMusic"))
 	}
 	return nil
 }

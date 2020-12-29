@@ -35,23 +35,23 @@ func run(ctx handler.CommandContext) error {
 		}
 
 		if isInVoice := utils.IsInVoiceWithMusic(guild, ctx.Message.Author.ID); !isInVoice {
-			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "You're not listening to my music :(")
+			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRNotPlaying"))
 			return nil
 		}
 		pos, errNotSecond := strconv.Atoi(ctx.Arguments[commandArg])
 		pos = pos * 1000
 		if errNotSecond != nil || pos < 0 {
-			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Please give me valid time")
+			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRTime"))
 			return nil
 		}
 		if ms.Queue[0].Track.Info.Length <= int64(pos) {
-			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Requested time is same with song or longer")
+			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRTime2"))
 			return nil
 		}
 		ms.Player.Seek(int64(pos))
-		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, fmt.Sprintf(":stopwatch: Moved to %s.", ctx.Arguments[commandArg]))
+		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:SeekTo", ctx.Arguments[commandArg]))
 	} else {
-		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "There is no music playing.")
+		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:NoMusic"))
 	}
 	return nil
 }

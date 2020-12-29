@@ -2,5 +2,97 @@
   {
     "name": "NotInVoiceChannel",
     "text": "음성체널에 들어가있지 않습니다."
+  },
+  {
+    "name": "SongInfo",
+    "text": "[{}]({})\n업로더: {}"
+  },
+ {
+    "name":"ReqBy",
+    "text": "{}#{}가 요청함"
+  },
+ {
+    "name": "Duration",
+    "text": "길이"
+  },
+  {
+    "name":"ETA",
+    "text": "남은시간"
+  },
+ {
+    "name":"BRUrl",
+    "text": "Url또는 검색어를 입력해주세요."
+  },
+ {
+    "name":"BRTime",
+    "text": "올바른 시간을 입력해주세요."
+  },
+{
+    "name":"BRTime2",
+    "text": "요청한 시간이 곡의 시간과 길거나 같습니다."
+  },
+{
+    "name":"BRTwitch",
+    "text": "봇을 이용하여 트위치를 시청하는것은 좋지 않습니다. 브라우저를 대신 이용해주세요."
+  },
+{
+    "name":"BRVoiceChannel",
+    "text": "이미 다른 음성채널에 봇이 들어가 있습니다."
+  },
+{
+    "name":"BRNotPlaying",
+    "text": "현제 노래를 재생중이지 않습니다."
+  },
+{
+    "name":"BRSearch",
+    "text": "검색어와 일치하는 노래를 찾지 못하였습니다. 다른 검색어를 입력해주세요."
+  },
+{
+    "name":"ErrQuery",
+    "text": "노래를 찾는도중 문제가 생겼습니다. 다시 시도해주세요."
+  },
+{
+    "name":"ErrLoad",
+    "text": "노래를 불러오지 못했습니다. 다시 시도해주세요."
+  },
+  {
+    "name":"NoMusic",
+    "text": "서버에서 재생중인 곡이 없습니다"
+  },
+  {
+    "name":"SeekTo",
+    "text": ":stopwatch: {} 로 이동합니다."
+  },
+{
+    "name":"Shuffled",
+    "text": "재생목록을 섞었습니다"
+  },
+  {
+    "name":"VoteAdded",
+    "text": "투표가 추가되었습니다! {}개의 투표가 더 필요합니다. ({}/{})"
+  },
+ {
+    "name":"ErrStopped",
+    "text": "재생이 중지되지 않았을 수 있습니다."
+  },
+ {
+    "name":"Stopped",
+    "text": "재생이 중지되었습니다."
+  },
+  {
+    "name":"BRNumber",
+    "text": "1~200 사이의 자연수를 입력해주세요."
+  },
+  {
+    "name":"Volume",
+    "text": "볼륨이 **{}%** 에서 **{}%**로 변경되었습니다."
+  },
+  {
+    "name":"CurVolume",
+    "text": "현제 볼륨은 **{}%** 입니다."
+  },
+  {
+    "name": "AddedQueue",
+    "text": "**{}** 가 재생목록에 추가되었습니다."
   }
 ]

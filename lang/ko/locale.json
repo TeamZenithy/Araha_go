@@ -1,0 +1,14 @@
+[
+    {
+        "name": "BDLocale",
+        "text": "올바른 언어를 입력해주세요"
+    },
+    {
+        "name":"Changed",
+        "text": "언어가 변경되었습니다: {}"
+    },
+    {
+        "name":"ChangedServer",
+        "text": "서버의 기본 언어가 변경되었습니다: {}"
+    }
+]

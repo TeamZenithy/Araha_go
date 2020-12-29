@@ -34,12 +34,12 @@ func run(ctx handler.CommandContext) error {
 
 	if utils.IsInVoiceWithMusic(guild, ctx.Message.Author.ID) {
 		if returnedMessage := utils.LeaveAndDestroy(ctx.Session, ctx.Message.GuildID); returnedMessage != "" {
-			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Playback may not have been stopped.\n"+returnedMessage)
+			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:ErrStopped")+"\n"+returnedMessage)
 		} else {
-			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Playback stopped.")
+			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:Stopped"))
 		}
 	} else {
-		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "You're not listening to my music :(")
+		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRNotPlaying"))
 	}
 	return nil
 }

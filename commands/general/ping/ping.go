@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/TeamZenithy/Araha/extensions/embed"
 	"github.com/TeamZenithy/Araha/handler"
 	"github.com/TeamZenithy/Araha/utils"
 )
@@ -28,6 +29,7 @@ const (
 )
 
 func run(ctx handler.CommandContext) error {
-	var _, err = ctx.Message.Reply("Pong! " + strconv.Itoa(int(ctx.Session.HeartbeatLatency().Milliseconds())) + "ms :stopwatch:")
-	return err
+	e := embed.New(ctx.Session, ctx.Message.ChannelID)
+	e.SendEmbed(embed.INFO, "Pong! "+strconv.Itoa(int(ctx.Session.HeartbeatLatency().Milliseconds()))+"ms :stopwatch:")
+	return nil
 }

@@ -37,21 +37,21 @@ func run(ctx handler.CommandContext) error {
 		}
 
 		if isInVoice := utils.IsInVoiceWithMusic(guild, ctx.Message.Author.ID); !isInVoice {
-			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "You're not listening to my music :(")
+			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRNotPlaying"))
 			return nil
 		}
 		if ctx.Arguments[commandArg] == "" {
-			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, fmt.Sprintf("Current volume is **%d**%v", ms.Player.GetVolume(), "%"))
+			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:CurVolume", strconv.Itoa(ms.Player.GetVolume())))
 			return nil
 		}
 		vol, err := strconv.Atoi(ctx.Arguments[commandArg])
 		if err != nil {
-			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Please enter a natural number between 1 and 200.")
+			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRNumber"))
 			logger.Warn(err.Error())
 			return nil
 		}
 		if vol < 1 || vol > 200 {
-			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Please adjust volume between 1 and 200.")
+			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRNumber"))
 			return nil
 		}
 		prevVol := ms.Player.GetVolume()
@@ -59,9 +59,9 @@ func run(ctx handler.CommandContext) error {
 		if err != nil {
 			logger.Warn(err.Error())
 		}
-		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, fmt.Sprintf("Adjusted volume from **%d**%v to **%d**%v", prevVol, "%", ms.Player.GetVolume(), "%"))
+		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:Volume", strconv.Itoa(prevVol), strconv.Itoa(ms.Player.GetVolume())))
 	} else {
-		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "There is no music playing.")
+		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRNotPlaying"))
 	}
 	return nil
 }

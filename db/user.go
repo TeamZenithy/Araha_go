@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-redis/redis/v8"
 
+	"github.com/TeamZenithy/Araha/logger"
 	"github.com/TeamZenithy/Araha/utils"
 )
 
@@ -20,7 +21,9 @@ func FindGuildLocale(id string) (string, error) {
 }
 
 func SetGuildLocale(id, value string) error {
-	return utils.RDB.Set(context.Background(), "users:locale:"+id, value, 0).Err()
+	err := utils.RDB.Set(context.Background(), "guild:locale:"+id, value, 0).Err()
+	err = utils.RDB.Save(context.Background()).Err()
+	return err
 }
 
 func FindUserLocale(id string) (string, error) {
@@ -31,9 +34,12 @@ func FindUserLocale(id string) (string, error) {
 		}
 		return "", err
 	}
+	logger.Info(get.Val())
 	return get.Val(), nil
 }
 
 func SetUserLocale(id, value string) error {
-	return utils.RDB.Set(context.Background(), "users:locale:"+id, value, 0).Err()
+	err := utils.RDB.Set(context.Background(), "users:locale:"+id, value, 0).Err()
+	err = utils.RDB.Save(context.Background()).Err()
+	return err
 }

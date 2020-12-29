@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	_ "net/http/pprof"
@@ -62,5 +63,8 @@ func main() {
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
 
+	logger.Info("Flushing data to db before shutting down...")
+	utils.RDB.Save(context.Background())
 	manager.StopAll()
+	logger.Info("All processes have been terminated.")
 }

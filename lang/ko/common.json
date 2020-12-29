@@ -1,1 +1,6 @@
-[]
+[
+    {
+        "name": "Permission",
+        "text": "해당 명령어를 실행할 수 있는 permission을 가지고 있지 않습니다."
+    }
+]

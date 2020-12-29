@@ -130,7 +130,6 @@ func HandleCreatedMessage(session *discordgo.Session, message *discordgo.Message
 	} else {
 		userLocale = l
 	}
-
 	context := CommandContext{
 		Session: session,
 		Message: objects.ExtendMessage(message.Message, session),

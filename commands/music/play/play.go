@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	audioengine "github.com/TeamZenithy/Araha/engine/audio"
+	"github.com/TeamZenithy/Araha/extensions/embed"
 	"github.com/TeamZenithy/Araha/handler"
 	"github.com/TeamZenithy/Araha/logger"
 	"github.com/TeamZenithy/Araha/model"
@@ -33,6 +34,7 @@ const (
 )
 
 func run(ctx handler.CommandContext) error {
+	e := embed.New(ctx.Session, ctx.Message.ChannelID)
 	guild, err := ctx.Session.State.Guild(ctx.Message.GuildID)
 	if err != nil {
 		return nil
@@ -40,7 +42,7 @@ func run(ctx handler.CommandContext) error {
 
 	query := ctx.Arguments[commandArg]
 	if query == "" {
-		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Please provide a url or search query.")
+		e.SendEmbed(embed.BADREQ, ctx.T("music:BRUrl"))
 		return nil
 	}
 
@@ -51,7 +53,7 @@ func run(ctx handler.CommandContext) error {
 		}
 	}
 	if userVoiceState.UserID == "" {
-		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "You are not in a voice channel.")
+		e.SendEmbed(embed.BADREQ, ctx.T("music:NotInVoiceChannel"))
 		return nil
 	}
 
@@ -61,7 +63,7 @@ func run(ctx handler.CommandContext) error {
 	if strings.HasPrefix(query, "http") && strings.Contains(query, "://") {
 		query = strings.ReplaceAll(query, " ", "%20")
 		if strings.Contains(query, "twitch.tv") {
-			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "I'm sorry. It's not good to watch Twitch using a bot. Please use the browser instead of me.")
+			e.SendEmbed(embed.BADREQ, ctx.T("music:BRTwitch"))
 			return nil
 		}
 		tracks, errLoadTracks = node.LoadTracks(utils.QUERY_TYPE_URL, query)
@@ -102,27 +104,27 @@ func run(ctx handler.CommandContext) error {
 			}
 			ms = model.Music[ctx.Message.GuildID]
 		} else {
-			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "I am already in a different voice channel; not switching.")
+			e.SendEmbed(embed.BADREQ, ctx.T("music:BRVoiceChannel"))
 			return nil
 		}
 	}
 
 	if err != nil {
-		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Error finding music node. Please try again.\n"+err.Error())
+		e.SendEmbed(embed.ERR_BOT, ctx.T("music:ErrFind")+"\n"+err.Error())
 		return nil
 	}
 
 	if errLoadTracks != nil {
-		_, errLoadTracks = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Error with query. Please try again or try a different query.\n"+err.Error())
+		e.SendEmbed(embed.ERR_BOT, ctx.T("music:ErrQuery"+"\n"+err.Error()))
 		return nil
 	}
 
 	if tracks.Type != audioengine.TrackLoaded {
 		if tracks.Type == audioengine.LoadFailed {
-			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Track failed to load. Please try again.")
+			e.SendEmbed(embed.ERR_BOT, ctx.T("music:ErrLoad"))
 			return nil
 		} else if tracks.Type == audioengine.NoMatches {
-			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "No matches for that query. Please try a different query.")
+			e.SendEmbed(embed.BADREQ, ctx.T("music:BRSearch"))
 			return nil
 		}
 	}
@@ -132,15 +134,15 @@ func run(ctx handler.CommandContext) error {
 			errLoadTracks := queueSong(ctx, tracks.Tracks[pos], ms, len(tracks.Tracks))
 			if errLoadTracks != nil {
 				logger.Warn(errLoadTracks.Error())
-				ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Error adding songs to queue. Please try again.\n"+errLoadTracks.Error())
+				e.SendEmbed(embed.ERR_BOT, "Error adding songs to queue. Please try again.\n"+errLoadTracks.Error())
 				return nil
 			}
 		}
-		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, fmt.Sprintf("Queued **%d** songs...", len(tracks.Tracks)))
+		e.SendEmbed(embed.INFO, ctx.T("music:AddedQueue", tracks.Tracks[0].Info.Title))
 	} else {
 		track := tracks.Tracks[0]
 		err = queueSong(ctx, track, ms, 1)
-		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, fmt.Sprintf("Queued for playback: **%s**", track.Info.Title))
+		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:AddedQueue", track.Info.Title))
 		if err != nil {
 			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Error adding song to queue. Please try again.\n"+err.Error())
 			return nil
@@ -173,6 +175,7 @@ func queueSong(ctx handler.CommandContext, track audioengine.Track, ms *model.Mu
 }
 
 func playSong(ctx handler.CommandContext, song model.Song, ms *model.MusicStruct, startTime int) (err error) {
+	e := embed.New(ctx.Session, ctx.Message.ChannelID)
 	err = utils.Player.Play(song.Track.Data)
 	if err != nil {
 		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Error playing *"+song.Track.Info.Title+"*. Skipping to next song.\n"+err.Error())
@@ -185,7 +188,7 @@ func playSong(ctx handler.CommandContext, song model.Song, ms *model.MusicStruct
 	user, _ := ctx.Session.User(song.Requester)
 	username := user.Username
 	discriminator := user.Discriminator
-	_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, fmt.Sprintf(":musical_note: Now playing: **%s** *(requested by %s)*", song.Track.Info.Title, fmt.Sprintf("%s#%s", username, discriminator)))
+	e.SendEmbed(embed.INFO, fmt.Sprintf(":musical_note: Now playing: **%s** ", song.Track.Info.Title), embed.AddFooter(ctx.T("music:ReqBy", username, discriminator)))
 
 	end := <-ms.SongEnd
 	if end == "next" {

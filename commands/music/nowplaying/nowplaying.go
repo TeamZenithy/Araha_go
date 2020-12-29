@@ -58,25 +58,25 @@ func run(ctx handler.CommandContext) error {
 		}
 		embed := &discordgo.MessageEmbed{
 			Title:       "Now Playing",
-			Description: fmt.Sprintf("[%s](%s)\nUploaded by %s", ms.Queue[0].Track.Info.Title, ms.Queue[0].Track.Info.URI, ms.Queue[0].Track.Info.Author),
+			Description: ctx.T("music:SongInfo", ms.Queue[0].Track.Info.Title, ms.Queue[0].Track.Info.URI, ms.Queue[0].Track.Info.Author),
 			Fields:      []*discordgo.MessageEmbedField{},
 			Timestamp:   time.Now().Format(time.RFC3339),
 			Thumbnail:   &discordgo.MessageEmbedThumbnail{URL: imgURL, Width: 1280, Height: 720},
-			Footer:      &discordgo.MessageEmbedFooter{Text: fmt.Sprintf("Requested by %s#%s", user.Username, user.Discriminator), IconURL: user.AvatarURL("")},
+			Footer:      &discordgo.MessageEmbedFooter{Text: ctx.T("music:ReqBy", user.Username, user.Discriminator), IconURL: user.AvatarURL("")},
 		}
 		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
-			Name:   "Duration",
+			Name:   ctx.T("music:Duration"),
 			Value:  strings.Replace(strings.Replace(strings.Replace(time.Until(time.Now().Add(time.Duration(ms.Queue[0].Track.Info.Length)*time.Millisecond)).Round(time.Second).String(), "h", "h ", -1), "m", "m ", -1), "s", "s ", -1),
 			Inline: true,
 		})
 		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
-			Name:   "ETA",
+			Name:   ctx.T("music:ETA"),
 			Value:  strings.Replace(strings.Replace(strings.Replace(time.Until(time.Now().Add(time.Duration(ms.Queue[0].Track.Info.Length-ms.Player.Position())*time.Millisecond)).Round(time.Second).String(), "h", "h ", -1), "m", "m ", -1), "s", "s ", -1),
 			Inline: true,
 		})
 		_, err = ctx.Session.ChannelMessageSendEmbed(ctx.Message.ChannelID, embed)
 	} else {
-		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "There is no music playing in this server.")
+		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:NoMusic"))
 	}
 	return nil
 }
