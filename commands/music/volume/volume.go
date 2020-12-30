@@ -1,9 +1,9 @@
 package volume
 
 import (
-	"fmt"
 	"strconv"
 
+	"github.com/TeamZenithy/Araha/extensions/embed"
 	"github.com/TeamZenithy/Araha/handler"
 	"github.com/TeamZenithy/Araha/logger"
 	"github.com/TeamZenithy/Araha/model"
@@ -19,7 +19,7 @@ func Initialize() {
 			Aliases:              []string{"vol"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_MUSIC,
-			Usage:                map[string]string{"Required Permission": "**``SPEAK``**", "Description": "``Adjust volume of player.``", "Usage": fmt.Sprintf("```css\n%svolume [0 ~ 200]```", utils.Prefix)},
+			Description:          &handler.Description{ReqPermsission: "SPEAK", Usage: "volume [0 ~ 200]"},
 		},
 	)
 }
@@ -30,6 +30,7 @@ const (
 )
 
 func run(ctx handler.CommandContext) error {
+	e := embed.New(ctx.Session, ctx.Message.ChannelID)
 	if ms, ok := model.Music[ctx.Message.GuildID]; ok {
 		guild, err := ctx.Session.State.Guild(ctx.Message.GuildID)
 		if err != nil {
@@ -37,21 +38,21 @@ func run(ctx handler.CommandContext) error {
 		}
 
 		if isInVoice := utils.IsInVoiceWithMusic(guild, ctx.Message.Author.ID); !isInVoice {
-			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRNotPlaying"))
+			e.SendEmbed(embed.BADREQ, ctx.T("music:BRNotPlaying"))
 			return nil
 		}
 		if ctx.Arguments[commandArg] == "" {
-			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:CurVolume", strconv.Itoa(ms.Player.GetVolume())))
+			e.SendEmbed(embed.INFO, ctx.T("music:CurVolume", strconv.Itoa(ms.Player.GetVolume())))
 			return nil
 		}
 		vol, err := strconv.Atoi(ctx.Arguments[commandArg])
 		if err != nil {
-			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRNumber"))
+			e.SendEmbed(embed.BADREQ, ctx.T("music:BRNumber"))
 			logger.Warn(err.Error())
 			return nil
 		}
 		if vol < 1 || vol > 200 {
-			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRNumber"))
+			e.SendEmbed(embed.BADREQ, ctx.T("music:BRNumber"))
 			return nil
 		}
 		prevVol := ms.Player.GetVolume()
@@ -59,9 +60,9 @@ func run(ctx handler.CommandContext) error {
 		if err != nil {
 			logger.Warn(err.Error())
 		}
-		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:Volume", strconv.Itoa(prevVol), strconv.Itoa(ms.Player.GetVolume())))
+		e.SendEmbed(embed.INFO, ctx.T("music:Volume", strconv.Itoa(prevVol), strconv.Itoa(ms.Player.GetVolume())))
 	} else {
-		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRNotPlaying"))
+		e.SendEmbed(embed.BADREQ, ctx.T("music:BRNotPlaying"))
 	}
 	return nil
 }

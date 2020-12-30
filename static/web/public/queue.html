@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
+    <script>
+      /*if (
+        localStorage.theme === 'dark' ||
+        (!('theme' in localStorage) &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ) {
+        document.querySelector('html').classList.add('dark')
+      } else {
+        document.querySelector('html').classList.remove('dark')
+      }*/
+    </script>
+    <title>Araha Music Queue</title>
+  </head>
+  <body class="bg-gray-50 dark:bg-gray-800">
+    {{ define "card" }}
+    <div class="w-full rounded-lg shadow-lg bg-white py-3 px-4 mb-6">
+      <div>
+        <a href="{{.Track.Info.URI}}" target="_blank" class="text-lg font-semibold">{{ .Track.Info.Title }}</a>
+        <div class="text-md mt-2">{{ .Track.Info.Author }}</div>
+      </div>
+    </div>
+    {{ end }}
+    <nav class="py-6 px-8 shadow-lg bg-white">
+      <div class="flex space-between">
+        <div class="text-2xl">Araha Music Queue</div>
+        <div></div>
+      </div>
+    </nav>
+    <main class="container mx-auto my-14 px-10 md:pa-0">
+      {{ if .hasData }} {{ with .queue.Queue}}
+      <div>
+        <div class="text-xl my-8">Now Playing</div>
+        {{ $d := index . 0}} {{template "card" $d}} {{ $length := len . }} {{ if ne $length 1 }}
+        <div class="text-xl mt-12 mb-8">Next Songs</div>
+        {{ range $i, $d := . }} {{ if ne $i 0 }} {{template "card" $d}} {{end}} {{end}} {{end}}
+      </div>
+      {{end}} {{else}}
+      <div class="text-xl">No Queue</div>
+      {{ end }}
+    </main>
+  </body>
+</html>

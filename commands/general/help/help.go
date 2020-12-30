@@ -1,10 +1,11 @@
 package help
 
 import (
-	"fmt"
 	"strings"
 
+	"github.com/TeamZenithy/Araha/extensions/embed"
 	"github.com/TeamZenithy/Araha/utils"
+	"github.com/bwmarrin/discordgo"
 
 	"github.com/TeamZenithy/Araha/handler"
 )
@@ -18,7 +19,7 @@ func Initialize() {
 			Aliases:              []string{"h", "guide", "manual"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_GENERAL,
-			Usage:                map[string]string{"Required Permission": "**``none``**", "Description": "``모든 명령어의 도움말을 표시합니다.``", "Usage": fmt.Sprintf("```css\n%shelp [command]```", utils.Prefix)},
+			Description:          &handler.Description{ReqPermsission: "none", Usage: "help [command]"},
 		},
 	)
 }
@@ -29,68 +30,83 @@ const (
 )
 
 func run(ctx handler.CommandContext) error {
+	e := embed.New(ctx.Session, ctx.Message.ChannelID)
 	if _, exists := ctx.Arguments[commandArg]; exists {
 		// show specific information about a command
-		command, isExists := handler.Commands[strings.ToLower(ctx.Arguments[commandArg])]
+		cmd, isExists := handler.Commands[strings.ToLower(ctx.Arguments[commandArg])]
 		aliasCommand, isExistsAliasCommand := handler.Aliases[strings.ToLower(ctx.Arguments[commandArg])]
 
 		if !isExists && isExistsAliasCommand {
 			isExists = isExistsAliasCommand
-			command = handler.Commands[aliasCommand]
+			cmd = handler.Commands[aliasCommand]
 		}
 
 		if isExists {
-			var formattedCommandNames []string
-
-			formattedCommandNames = append(
-				formattedCommandNames,
-				fmt.Sprint(">>> Command: `", command.Name, "`"))
-
-			var formattedRequiredArgumentType []string
-
-			for _, value := range command.RequiredArgumentType {
-				formattedRequiredArgumentType = append(
-					formattedRequiredArgumentType,
-					fmt.Sprint("`", value, "`"))
+			fields := []*discordgo.MessageEmbedField{}
+			alias := ""
+			if len(cmd.Aliases) < 1 {
+				alias = ctx.T("generalNone")
 			}
-
-			var formattedCommandAliases []string
-
-			if formattedCommandAliases == nil || len(command.Aliases) == 1 && command.Aliases[0] == "" {
-				formattedCommandAliases = append(formattedCommandAliases, fmt.Sprint("`none`"))
-			} else {
-				for _, value := range command.Aliases {
-					formattedCommandAliases = append(formattedCommandAliases, fmt.Sprint("`", value, "`"))
+			for i, d := range cmd.Aliases {
+				if i != 0 {
+					alias += ", "
 				}
+				alias += d
 			}
 
-			var formattedUsage []string
+			fields = append(fields, &discordgo.MessageEmbedField{
+				Name:   ctx.T("general:Alias"),
+				Value:  alias,
+				Inline: true,
+			})
 
-			for key, value := range command.Usage {
-				formattedUsage = append(
-					formattedUsage,
-					fmt.Sprint("", key, ": ", value, "\n"))
+			reqPermission := cmd.Description.ReqPermsission
+			if reqPermission == "none" {
+				reqPermission = ctx.T("general:None")
 			}
 
-			var _, err = ctx.Message.Reply(
-				fmt.Sprint(
-					strings.Join(formattedCommandNames, ", "),
-					"\nAlias: ",
-					strings.Join(formattedCommandAliases, ", "),
-					"\nRequired Argument(s): ",
-					strings.Join(formattedRequiredArgumentType, ", "),
-					"\n",
-					strings.Join(formattedUsage, "")))
-			return err
+			fields = append(fields, &discordgo.MessageEmbedField{
+				Name:   ctx.T("general:Permission"),
+				Value:  reqPermission,
+				Inline: true,
+			})
+
+			fields = append(fields, &discordgo.MessageEmbedField{
+				Name:   ctx.T("general:Usage"),
+				Value:  cmd.Description.Usage,
+				Inline: true,
+			})
+
+			e.SendEmbed(embed.INFO, ctx.T("cmd:"+cmd.Name), embed.AddTitle(cmd.Name), embed.AddFields(fields))
+
+			return nil
 		}
-		var _, err = ctx.Message.Reply("The command was not found!")
-		return err
+		e.SendEmbed(embed.BADREQ, ctx.T("general:BRNotFound"))
+		return nil
 	}
-	var outputStr = ">>> List of commands:\n"
-	for commandName := range handler.Commands {
-		outputStr += fmt.Sprint("`", commandName, "`, ")
+
+	list := map[string]string{}
+	fields := []*discordgo.MessageEmbedField{}
+	for _, v := range handler.Commands {
+		target := ""
+		switch v.Category {
+		case utils.CATEGORY_GENERAL:
+			target = "General"
+		case utils.CATEGORY_LOCALE:
+			target = "Locale"
+		case utils.CATEGORY_MUSIC:
+			target = "Music"
+		}
+		list[target] += v.Name + " "
 	}
-	outputStr = outputStr[:len(outputStr)-len(", ")]
-	var _, err = ctx.Message.Reply(outputStr)
-	return err
+
+	for k, v := range list {
+		fields = append(fields, &discordgo.MessageEmbedField{
+			Name:   k,
+			Value:  strings.ReplaceAll(strings.TrimSpace(v), " ", ", "),
+			Inline: false,
+		})
+	}
+	e.SendEmbed(embed.INFO, "", embed.AddTitle(ctx.T("general:CommandList")), embed.AddFields(fields))
+	return nil
 }

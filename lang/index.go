@@ -22,6 +22,7 @@ type TrLocale struct {
 type Tr struct {
 	TrTexts map[string]*TrLocale
 }
+type HFType func(string, ...string) string
 
 func NewTrLocale(folder string) *TrLocale {
 	var trLocale TrLocale
@@ -56,7 +57,7 @@ func (t *Tr) AddLang(locale *TrLocale) {
 	t.TrTexts[locale.Locale] = locale
 }
 
-func (t *Tr) GetHandlerFunc(lang, fallback string) func(string, ...string) string {
+func (t *Tr) GetHandlerFunc(lang, fallback string) HFType {
 	find := func(lang, file, key string) (string, bool) {
 		for _, d := range *t.TrTexts[lang].Transitions[file] {
 			if d.Name == key {

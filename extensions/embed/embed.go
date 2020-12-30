@@ -1,6 +1,9 @@
 package embed
 
 import (
+	"time"
+
+	"github.com/TeamZenithy/Araha/lang"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -15,11 +18,15 @@ type Embed struct {
 type EmbedMore struct {
 	EmbedMoreType EmbedMoreType
 	Data          interface{}
+	T             func(string)
 }
 
 const (
 	FOOTER = iota + 1
-	FOOTER_USER
+	TITLE
+	LINK
+	THUMBNAIL
+	FIELDS
 )
 
 const (
@@ -38,8 +45,21 @@ func (e *Embed) SendEmbed(embedType EmbedType, message string, embedMore ...*Emb
 	for _, d := range embedMore {
 		switch d.EmbedMoreType {
 		case FOOTER:
+			footer := d.Data.(*discordgo.MessageEmbedFooter)
+			embed.Footer = footer
+			embed.Timestamp = time.Now().Format(time.RFC3339)
+		case TITLE:
 			text := d.Data.(string)
-			embed.Footer = &discordgo.MessageEmbedFooter{Text: text}
+			embed.Title = text
+		case LINK:
+			text := d.Data.(string)
+			embed.URL = text
+		case THUMBNAIL:
+			text := d.Data.(string)
+			embed.Thumbnail = &discordgo.MessageEmbedThumbnail{URL: text, Width: 1280, Height: 720}
+		case FIELDS:
+			fields := d.Data.([]*discordgo.MessageEmbedField)
+			embed.Fields = fields
 		}
 	}
 	switch embedType {
@@ -57,6 +77,26 @@ func (e *Embed) SendEmbed(embedType EmbedType, message string, embedMore ...*Emb
 	e.Session.ChannelMessageSendEmbed(e.ChannelID, &embed)
 }
 
-func AddFooter(message string) *EmbedMore {
-	return &EmbedMore{EmbedMoreType: FOOTER, Data: message}
+func AddTitle(message string) *EmbedMore {
+	return &EmbedMore{EmbedMoreType: TITLE, Data: message}
+}
+
+func AddLink(link string) *EmbedMore {
+	return &EmbedMore{EmbedMoreType: LINK, Data: link}
+}
+
+func AddFooter(msg string) *EmbedMore {
+	return &EmbedMore{EmbedMoreType: FOOTER, Data: &discordgo.MessageEmbedFooter{Text: msg}}
+}
+
+func AddProfileFooter(user *discordgo.User, T lang.HFType) *EmbedMore {
+	return &EmbedMore{EmbedMoreType: FOOTER, Data: &discordgo.MessageEmbedFooter{Text: T("music:ReqBy", user.Username, user.Discriminator), IconURL: user.AvatarURL("")}}
+}
+
+func AddThumbnail(url string) *EmbedMore {
+	return &EmbedMore{EmbedMoreType: THUMBNAIL, Data: url}
+}
+
+func AddFields(fields []*discordgo.MessageEmbedField) *EmbedMore {
+	return &EmbedMore{EmbedMoreType: FIELDS, Data: fields}
 }

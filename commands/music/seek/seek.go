@@ -1,9 +1,9 @@
 package seek
 
 import (
-	"fmt"
 	"strconv"
 
+	"github.com/TeamZenithy/Araha/extensions/embed"
 	"github.com/TeamZenithy/Araha/handler"
 	"github.com/TeamZenithy/Araha/model"
 	"github.com/TeamZenithy/Araha/utils"
@@ -17,7 +17,7 @@ func Initialize() {
 			Name:                 commandName,
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_MUSIC,
-			Usage:                map[string]string{"Required Permission": "**``SPEAK``**", "Description": "``Navigate to the requested location of the song that is currently playing.``", "Usage": fmt.Sprintf("```css\n%sseek [second]```", utils.Prefix)},
+			Description:          &handler.Description{ReqPermsission: "SPEAK", Usage: "seek [second]"},
 		},
 	)
 }
@@ -28,6 +28,7 @@ const (
 )
 
 func run(ctx handler.CommandContext) error {
+	e := embed.New(ctx.Session, ctx.Message.ChannelID)
 	if ms, ok := model.Music[ctx.Message.GuildID]; ok {
 		guild, err := ctx.Session.State.Guild(ctx.Message.GuildID)
 		if err != nil {
@@ -35,23 +36,23 @@ func run(ctx handler.CommandContext) error {
 		}
 
 		if isInVoice := utils.IsInVoiceWithMusic(guild, ctx.Message.Author.ID); !isInVoice {
-			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRNotPlaying"))
+			e.SendEmbed(embed.BADREQ, ctx.T("music:BRNotPlaying"))
 			return nil
 		}
 		pos, errNotSecond := strconv.Atoi(ctx.Arguments[commandArg])
 		pos = pos * 1000
 		if errNotSecond != nil || pos < 0 {
-			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRTime"))
+			e.SendEmbed(embed.BADREQ, ctx.T("music:BRTime"))
 			return nil
 		}
 		if ms.Queue[0].Track.Info.Length <= int64(pos) {
-			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRTime2"))
+			e.SendEmbed(embed.BADREQ, ctx.T("music:BRTime2"))
 			return nil
 		}
 		ms.Player.Seek(int64(pos))
-		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:SeekTo", ctx.Arguments[commandArg]))
+		e.SendEmbed(embed.BADREQ, ctx.T("music:SeekTo", ctx.Arguments[commandArg]))
 	} else {
-		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:NoMusic"))
+		e.SendEmbed(embed.BADREQ, ctx.T("music:NoMusic"))
 	}
 	return nil
 }

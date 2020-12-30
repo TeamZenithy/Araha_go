@@ -1,8 +1,6 @@
 package whoami
 
 import (
-	"fmt"
-
 	"github.com/TeamZenithy/Araha/utils"
 
 	"github.com/TeamZenithy/Araha/handler"
@@ -17,7 +15,7 @@ func Initialize() {
 			Aliases:              []string{"wai"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_GENERAL,
-			Usage:                map[string]string{"Required Permission": "**``none``**", "Description": "``Check your permission``", "Usage": fmt.Sprintf("```css\n%swhoami```", utils.Prefix)},
+			Description:          &handler.Description{ReqPermsission: "none", Usage: "whoami"},
 		},
 	)
 }

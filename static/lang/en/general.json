@@ -1,0 +1,42 @@
+[
+    {
+        "name": "Alias",
+        "text": "Alias"
+    },
+    {
+        "name": "Command",
+        "text": "Command"
+    },
+    {
+        "name": "CommandList",
+        "text": "Command List"
+    },
+    {
+        "name": "Usage",
+        "text": "Usage"
+    },
+    {
+        "name": "ReqArgs",
+        "text": "Required Arguments."
+    },
+    {
+        "name": "None",
+        "text": "None"
+    },
+    {
+        "name": "BRNotFound",
+        "text": "That command does not exist."
+    },
+    {
+        "name": "BRPage",
+        "text": "Sorry, That page does not exist."
+    },
+    {
+        "name": "Permission",
+        "text": "Permission"
+    },
+    {
+        "name": "BRPermission",
+        "text": "You do not have permission to run this command."
+    }
+]

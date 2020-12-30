@@ -42,14 +42,14 @@ func main() {
 	manager.AddHandler(events.VoiceStateUpdate)
 
 	// !!!!!! Change this when release
-	// recommended, err := manager.GetRecommendedCount()
-	// if err != nil {
-	// 	logger.Fatal("Failed getting recommended shard count")
-	// }
-	// if recommended < 2 {
-	// 	manager.SetNumShards(5)
-	// }
-	manager.SetNumShards(1)
+	recommended, err := manager.GetRecommendedCount()
+	if err != nil {
+		logger.Fatal("Failed getting recommended shard count")
+	}
+	if recommended < 2 {
+		manager.SetNumShards(5)
+	}
+	// manager.SetNumShards(1)
 
 	logger.Info("Starting the shard manager")
 	manager.Init()
@@ -63,7 +63,7 @@ func main() {
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
 
-	logger.Info("Flushing data to db before shutting down...")
+	logger.Info("Saving all data to db before shutting down...")
 	utils.RDB.Save(context.Background())
 	manager.StopAll()
 	logger.Info("All processes have been terminated.")

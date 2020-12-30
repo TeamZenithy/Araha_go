@@ -5,7 +5,6 @@ import (
 
 	"github.com/go-redis/redis/v8"
 
-	"github.com/TeamZenithy/Araha/logger"
 	"github.com/TeamZenithy/Araha/utils"
 )
 
@@ -34,7 +33,6 @@ func FindUserLocale(id string) (string, error) {
 		}
 		return "", err
 	}
-	logger.Info(get.Val())
 	return get.Val(), nil
 }
 

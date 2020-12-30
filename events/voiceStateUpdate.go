@@ -23,9 +23,6 @@ func VoiceStateUpdate(session *discordgo.Session, event *discordgo.VoiceStateUpd
 	}
 	if utils.GetUsersInVoice(guild) == 0 {
 		ms.SongEnd <- "end"
-		if returnedMessage := utils.LeaveAndDestroy(session, event.GuildID); returnedMessage != "" {
-			logger.Info(returnedMessage)
-		}
 		return
 	}
 }

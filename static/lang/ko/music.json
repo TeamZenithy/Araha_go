@@ -41,7 +41,7 @@
   },
 {
     "name":"BRNotPlaying",
-    "text": "현제 노래를 재생중이지 않습니다."
+    "text": "현재 노래를 재생중이지 않습니다."
   },
 {
     "name":"BRSearch",
@@ -61,7 +61,7 @@
   },
   {
     "name":"SeekTo",
-    "text": ":stopwatch: {} 로 이동합니다."
+    "text": ":stopwatch: {}초로 이동합니다."
   },
 {
     "name":"Shuffled",
@@ -85,14 +85,34 @@
   },
   {
     "name":"Volume",
-    "text": "볼륨이 **{}%** 에서 **{}%**로 변경되었습니다."
+    "text": "볼륨이 **{}%**에서 **{}%**로 변경되었습니다."
   },
   {
     "name":"CurVolume",
-    "text": "현제 볼륨은 **{}%** 입니다."
+    "text": "현재 볼륨은 **{}%** 입니다."
   },
   {
     "name": "AddedQueue",
-    "text": "**{}** 가 재생목록에 추가되었습니다."
+    "text": "**{}**가 재생목록에 추가되었습니다."
+  },
+  {
+    "name": "AddedPlaylistQueue",
+    "text": "**{}**개의 노래가 재생목록에 추가되었습니다."
+  },
+  {
+    "name": "MoreSong",
+    "text": "디스코드에서는 최대 5개까지의 재생목록만 볼 수 있습니다. [사이트 바로기가]({})"
+  },
+  {
+    "name":"NowPlaying",
+    "text":"현재 재생중"
+  },
+  {
+    "name":"MoreSongName",
+    "text":"더 많은 대기열을 보고 싶나요?"
+  },
+  {
+    "name":"MusicQueue",
+    "text":"음악 대기열"
   }
 ]

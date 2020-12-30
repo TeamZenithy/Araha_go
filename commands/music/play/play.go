@@ -23,14 +23,14 @@ func Initialize() {
 			Aliases:              []string{"p"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_MUSIC,
-			Usage:                map[string]string{"Required Permission": "**``SPEAK``**", "Description": "``Search for the requested song title or link to play the song.\nIf you want search song on soudcloud, then include ''$soundcloud'' in message.``", "Usage": fmt.Sprintf("```css\n%splay [song title or link]```\n```css\n%splay [song name] --soundcloud```", utils.Prefix, utils.Prefix)},
+			Description:          &handler.Description{ReqPermsission: "SPEAK", Usage: "play [song title or link]\nplay [song name] $soundcloud"},
 		},
 	)
 }
 
 const (
 	commandName = "play"
-	commandArg  = "노래 이름 또는 링크"
+	commandArg  = "query"
 )
 
 func run(ctx handler.CommandContext) error {
@@ -134,21 +134,20 @@ func run(ctx handler.CommandContext) error {
 			errLoadTracks := queueSong(ctx, tracks.Tracks[pos], ms, len(tracks.Tracks))
 			if errLoadTracks != nil {
 				logger.Warn(errLoadTracks.Error())
-				e.SendEmbed(embed.ERR_BOT, "Error adding songs to queue. Please try again.\n"+errLoadTracks.Error())
+				e.SendEmbed(embed.ERR_BOT, ctx.T("error:ErrAddQueue")+errLoadTracks.Error())
 				return nil
 			}
 		}
-		e.SendEmbed(embed.INFO, ctx.T("music:AddedQueue", tracks.Tracks[0].Info.Title))
+		e.SendEmbed(embed.INFO, ctx.T("music:AddedPlaylistQueue", fmt.Sprint(len(tracks.Tracks))))
 	} else {
 		track := tracks.Tracks[0]
 		err = queueSong(ctx, track, ms, 1)
-		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:AddedQueue", track.Info.Title))
+		e.SendEmbed(embed.INFO, ctx.T("music:AddedQueue", track.Info.Title))
 		if err != nil {
-			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Error adding song to queue. Please try again.\n"+err.Error())
+			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("error:ErrAddQueue")+err.Error())
 			return nil
 		}
 	}
-
 	return nil
 }
 
@@ -186,9 +185,7 @@ func playSong(ctx handler.CommandContext, song model.Song, ms *model.MusicStruct
 		return
 	}
 	user, _ := ctx.Session.User(song.Requester)
-	username := user.Username
-	discriminator := user.Discriminator
-	e.SendEmbed(embed.INFO, fmt.Sprintf(":musical_note: Now playing: **%s** ", song.Track.Info.Title), embed.AddFooter(ctx.T("music:ReqBy", username, discriminator)))
+	e.SendEmbed(embed.INFO, fmt.Sprintf(":musical_note: Now playing: **%s** ", song.Track.Info.Title), embed.AddProfileFooter(user, ctx.T))
 
 	end := <-ms.SongEnd
 	if end == "next" {

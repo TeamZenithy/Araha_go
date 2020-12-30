@@ -2,6 +2,8 @@ package utils
 
 import (
 	"fmt"
+	"strings"
+	"time"
 
 	"github.com/TeamZenithy/Araha/model"
 	"github.com/bwmarrin/discordgo"
@@ -30,13 +32,16 @@ func IsInVoiceWithMusic(guild *discordgo.Guild, userID string) bool {
 
 // LeaveAndDestroy leaves the voice channel and destroys the player and queue
 func LeaveAndDestroy(s *discordgo.Session, guildID string) string {
-	player := Player
 	delete(model.Music, guildID)
-	if err := player.Destroy(); err != nil {
+	if err := Player.Destroy(); err != nil {
 		return fmt.Sprintf("Error destroying player for %s: %s", guildID, err)
 	}
 	if err := s.ChannelVoiceJoinManual(guildID, "", false, true); err != nil {
 		return fmt.Sprintf("Couldn't leave voice channel for %s: %s", guildID, err)
 	}
 	return ""
+}
+
+func TimeFormat(duration time.Duration) string {
+	return strings.Replace(strings.Replace(strings.Replace(time.Until(time.Now().Add(duration*time.Millisecond)).Round(time.Second).String(), "h", "h ", -1), "m", "m ", -1), "s", "s ", -1)
 }

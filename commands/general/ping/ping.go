@@ -1,7 +1,6 @@
 package ping
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/TeamZenithy/Araha/extensions/embed"
@@ -18,7 +17,7 @@ func Initialize() {
 			Aliases:              []string{"pong"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_GENERAL,
-			Usage:                map[string]string{"Required Permission": "**``none``**", "Description": "``Check ping of bot.``", "Usage": fmt.Sprintf("```css\n%sping```", utils.Prefix)},
+			Description:          &handler.Description{ReqPermsission: "none", Usage: "ping"},
 		},
 	)
 }

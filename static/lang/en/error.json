@@ -1,0 +1,10 @@
+[
+    {
+        "name":"ErrWriteData",
+        "text":"Error while writing the data.\n"
+    },
+    {
+        "name":"ErrAddQueue",
+        "text":"Error while adding songs to the queue. Please try again.\n"
+    }
+]

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/TeamZenithy/Araha/lang"
 	"github.com/TeamZenithy/Araha/utils"
 
 	"github.com/TeamZenithy/Araha/db"
@@ -31,7 +32,8 @@ type CommandContext struct {
 	Session   *discordgo.Session
 	Message   *objects.ExtendedMessage
 	Arguments map[string]string
-	T         func(string, ...string) string
+	T         lang.HFType
+	Locale    string
 }
 
 //Command includes Run(function), Name(list of srings), Required args type(list of strings), and Usage(map of string and string)
@@ -41,12 +43,12 @@ type Command struct {
 	Aliases              []string
 	RequiredArgumentType []string
 	Category             int
-	Usage                map[string]string
+	Usage                map[string]interface{}
+	Description          *Description
 }
 
 type Description struct {
 	ReqPermsission string
-	Description    string
 	Usage          string
 }
 
@@ -136,8 +138,9 @@ func HandleCreatedMessage(session *discordgo.Session, message *discordgo.Message
 		Arguments: parseArguments(
 			message.Content,
 			gcommand.RequiredArgumentType,
-			gcommand.Usage),
-		T: utils.TR.GetHandlerFunc(userLocale, "en"),
+			map[string]string{}),
+		T:      utils.TR.GetHandlerFunc(userLocale, "en"),
+		Locale: userLocale,
 	}
 
 	err = gcommand.Run(context)

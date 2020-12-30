@@ -8,6 +8,7 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-redis/redis/v8 v8.4.4
 	github.com/gorilla/websocket v1.4.1
+	github.com/jonas747/discordgo v1.5.2
 	github.com/pkg/errors v0.8.1
 	github.com/rojters/opengraph v0.0.2
 	github.com/sirupsen/logrus v1.7.0

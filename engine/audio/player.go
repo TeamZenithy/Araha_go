@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"strconv"
 
+	"github.com/TeamZenithy/Araha/logger"
 	"github.com/gorilla/websocket"
 )
 
@@ -180,6 +181,7 @@ func (player *Player) Destroy() error {
 	}
 	err = player.node.wsConn.WriteMessage(websocket.TextMessage, data)
 	if err != nil {
+		logger.Error(err.Error())
 		return err
 	}
 	delete(player.manager.players, player.guildID)

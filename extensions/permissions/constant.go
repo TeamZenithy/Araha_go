@@ -1,7 +1,9 @@
 package permissions
+
 // https://discord.com/developers/docs/topics/permissions
 //goland:noinspection GoSnakeCaseUsage,GoUnnecessarilyExportedIdentifiers
 const (
+	NONE                  = 0x00000000 // No Permission Required
 	CREATE_INSTANT_INVITE = 0x00000001 // Allows creation of instant invites
 	KICK_MEMBERS          = 0x00000002 // Allows kicking members
 	BAN_MEMBERS           = 0x00000004 // Allows banning members
@@ -34,8 +36,10 @@ const (
 	MANAGE_WEBHOOKS       = 0x20000000 // Allows management and editing of webhooks
 	MANAGE_EMOJIS         = 0x40000000 // Allows management and editing of emojis
 )
+
 var (
 	NameWithValue = map[string]int{
+		"NONE":                  NONE,
 		"CREATE_INSTANT_INVITE": CREATE_INSTANT_INVITE,
 		"KICK_MEMBERS":          KICK_MEMBERS,
 		"BAN_MEMBERS":           BAN_MEMBERS,
@@ -70,6 +74,7 @@ var (
 	}
 
 	ValueWithName = map[int]string{
+		NONE:                  "NONE",
 		CREATE_INSTANT_INVITE: "CREATE_INSTANT_INVITE",
 		KICK_MEMBERS:          "KICK_MEMBERS",
 		BAN_MEMBERS:           "BAN_MEMBERS",

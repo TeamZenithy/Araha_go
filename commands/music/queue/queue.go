@@ -2,7 +2,9 @@ package queue
 
 import (
 	"fmt"
+	"strconv"
 
+	"github.com/TeamZenithy/Araha/extensions/embed"
 	"github.com/TeamZenithy/Araha/handler"
 	"github.com/TeamZenithy/Araha/model"
 	"github.com/TeamZenithy/Araha/utils"
@@ -18,7 +20,7 @@ func Initialize() {
 			Aliases:              []string{"q"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_MUSIC,
-			Usage:                map[string]string{"Required Permission": "**``SPEAK``**", "Description": "``Shows current queue``", "Usage": fmt.Sprintf("```css\n%squeue```", utils.Prefix)},
+			Description:          &handler.Description{ReqPermsission: "SPEAK", Usage: "queue"},
 		},
 	)
 }
@@ -29,6 +31,7 @@ const (
 )
 
 func run(ctx handler.CommandContext) error {
+	e := embed.New(ctx.Session, ctx.Message.ChannelID)
 	guild, err := ctx.Session.State.Guild(ctx.Message.GuildID)
 	if err != nil {
 		return nil
@@ -41,29 +44,45 @@ func run(ctx handler.CommandContext) error {
 		}
 	}
 	if userVoiceState.UserID == "" {
-		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:NotInVoiceChannel"))
+		e.SendEmbed(embed.BADREQ, ctx.T("music:NotInVoiceChannel"))
 		return nil
 	}
 	ms, ok := model.Music[ctx.Message.GuildID]
 	if ok && len(ms.Queue) > 0 {
-		res := ""
-		length := 5
-		if len(ms.Queue) < 5 {
-			length = 5 - (5 - len(ms.Queue))
+		fields := []*discordgo.MessageEmbedField{}
+
+		// ! Change This
+		queueLink := "https://araha.b1ackange1.me/" + ctx.Locale + "/queue/" + ctx.Message.GuildID
+		lenQueue := len(ms.Queue)
+		loadLen := lenQueue
+		appendMoreField := false
+		if lenQueue > 5 {
+			loadLen = 5
+			appendMoreField = true
 		}
-		for i, song := range ms.Queue[:length] {
+		for i, song := range ms.Queue[:loadLen] {
+			name := strconv.Itoa(i+1) + "."
 			if i == 0 {
-				res += fmt.Sprintf("\n**%d: **%s - (Now Playing)", i+1, song.Track.Info.Title)
-			} else {
-				res += fmt.Sprintf("\n**%d: **%s", i+1, song.Track.Info.Title)
+				name += fmt.Sprintf(" (%s)", ctx.T("music:NowPlaying"))
 			}
+			user, _ := ctx.Session.User(song.Requester)
+			name += " - " + ctx.T("music:ReqBy", user.Username, user.Discriminator)
+			fields = append(fields, &discordgo.MessageEmbedField{
+				Name:   name,
+				Value:  fmt.Sprintf("[%s](%s)", song.Track.Info.Title, song.Track.Info.URI),
+				Inline: false,
+			})
 		}
-		if len(ms.Queue) > 5 {
-			res += fmt.Sprintf("\n\nAnd **%d** song(s) more in queue", len(ms.Queue)-5)
+		if appendMoreField {
+			fields = append(fields, &discordgo.MessageEmbedField{
+				Name:   ctx.T("music:MoreSongName"),
+				Value:  ctx.T("music:MoreSong", queueLink),
+				Inline: false,
+			})
 		}
-		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Song queue:\n"+res)
+		e.SendEmbed(embed.BADREQ, "", embed.AddTitle(ctx.T("music:MusicQueue")), embed.AddLink(queueLink), embed.AddFields(fields))
 	} else {
-		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:NoMusic"))
+		e.SendEmbed(embed.BADREQ, ctx.T("music:NoMusic"))
 	}
 	return nil
 }

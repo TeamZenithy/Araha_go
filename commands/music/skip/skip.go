@@ -1,10 +1,10 @@
 package skip
 
 import (
-	"fmt"
 	"math"
 	"strconv"
 
+	"github.com/TeamZenithy/Araha/extensions/embed"
 	"github.com/TeamZenithy/Araha/handler"
 	"github.com/TeamZenithy/Araha/model"
 	"github.com/TeamZenithy/Araha/utils"
@@ -19,7 +19,7 @@ func Initialize() {
 			Aliases:              []string{"s"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_MUSIC,
-			Usage:                map[string]string{"Required Permission": "**``SPEAK``**", "Description": "``Skip current song``", "Usage": fmt.Sprintf("```css\n%sskip```", utils.Prefix)},
+			Description:          &handler.Description{ReqPermsission: "SPEAK", Usage: "skip"},
 		},
 	)
 }
@@ -30,6 +30,8 @@ const (
 )
 
 func run(ctx handler.CommandContext) error {
+	e := embed.New(ctx.Session, ctx.Message.ChannelID)
+
 	if ms, ok := model.Music[ctx.Message.GuildID]; ok {
 		guild, err := ctx.Session.State.Guild(ctx.Message.GuildID)
 		if err != nil {
@@ -37,7 +39,7 @@ func run(ctx handler.CommandContext) error {
 		}
 
 		if isInVoice := utils.IsInVoiceWithMusic(guild, ctx.Message.Author.ID); !isInVoice {
-			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRNotPlaying"))
+			e.SendEmbed(embed.BADREQ, ctx.T("music:BRNotPlaying"))
 			return nil
 		}
 
@@ -48,10 +50,10 @@ func run(ctx handler.CommandContext) error {
 			ms.Player.Stop()
 		} else {
 			skips++
-			_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:VoteAdded", strconv.Itoa(int(usersInVoice-skips)), strconv.Itoa(int(skips)), strconv.Itoa(int(usersInVoice))))
+			e.SendEmbed(embed.INFO, ctx.T("music:VoteAdded", strconv.Itoa(int(usersInVoice-skips)), strconv.Itoa(int(skips)), strconv.Itoa(int(usersInVoice))))
 		}
 	} else {
-		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:NoMusic"))
+		e.SendEmbed(embed.BADREQ, ctx.T("music:NoMusic"))
 	}
 	return nil
 }

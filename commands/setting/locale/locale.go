@@ -7,6 +7,7 @@ import (
 	"github.com/TeamZenithy/Araha/db"
 
 	"github.com/TeamZenithy/Araha/extensions/embed"
+	"github.com/TeamZenithy/Araha/extensions/permissions"
 	"github.com/TeamZenithy/Araha/handler"
 	"github.com/TeamZenithy/Araha/lang"
 	"github.com/TeamZenithy/Araha/utils"
@@ -20,8 +21,8 @@ func Initialize() {
 			Name:                 commandName,
 			Aliases:              []string{"locale"},
 			RequiredArgumentType: []string{commandArg},
-			Category:             utils.CATEGORY_GENERAL,
-			Usage:                map[string]string{"Required Permission": "**``none``**", "Description": "``Set User or Guild's Language``", "Usage": fmt.Sprintf("```css\n%ssetlang [--user | --guild] (en | ko | default)```", utils.Prefix)},
+			Category:             utils.CATEGORY_LOCALE,
+			Description:          &handler.Description{ReqPermsission: "none", Usage: "setlang [user | guild] (en | ko | default)"},
 		},
 	)
 }
@@ -35,43 +36,44 @@ func run(ctx handler.CommandContext) error {
 	e := embed.New(ctx.Session, ctx.Message.ChannelID)
 
 	query := ctx.Arguments[commandArg]
-	fmt.Println(query)
 	if query == "" {
-		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Please provide locale.")
+		e.SendEmbed(embed.BADREQ, ctx.T("locale:BDEnter"))
 		return nil
 	}
 
 	setGuild := false
-	if strings.Contains(query, "--guild") {
-		// TODO: Check Permission
-		if false {
-			e.SendEmbed(embed.BADREQ, ctx.T("common:Permission"))
+	if strings.Contains(query, "guild") {
+		hasPermission, _ := utils.MemberHasPermission(ctx.Session, ctx.Message.GuildID, ctx.Message.Author.ID, permissions.MANAGE_GUILD)
+		if !hasPermission {
+			e.SendEmbed(embed.BADREQ, ctx.T("general:BRPermission"))
 		}
 		setGuild = true
+		query = strings.TrimSpace(strings.ReplaceAll(query, "guild", ""))
 	}
 
-	locale := query
+	locale := ""
 	if query == "default" {
 		locale = ""
-	}
-
-	if !lang.IsValidLocale(query) && locale != "" {
-		ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("locale:BDLocale"))
+	} else if lang.IsValidLocale(query) {
+		locale = query
+	} else {
+		fmt.Println()
+		e.SendEmbed(embed.BADREQ, ctx.T("locale:BDLocale"))
 		return nil
 	}
 
 	if !setGuild {
 		if err := db.SetUserLocale(ctx.Message.Author.ID, locale); err != nil {
-			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Error while writing data")
+			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("error:ErrWriteData"))
 			return nil
 		}
-		e.SendEmbed(embed.INFO, ctx.T("locale:Changed", locale))
+		e.SendEmbed(embed.INFO, ctx.T("locale:Changed", ctx.Locale, query))
 	} else {
 		if err := db.SetGuildLocale(ctx.Message.GuildID, locale); err != nil {
-			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, "Error while writing data")
+			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("error:ErrWriteData"))
 			return nil
 		}
-		e.SendEmbed(embed.INFO, ctx.T("locale:ChangedServer", locale))
+		e.SendEmbed(embed.INFO, ctx.T("locale:ChangedServer", ctx.Locale, query))
 	}
 
 	return nil

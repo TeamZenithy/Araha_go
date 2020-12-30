@@ -1,9 +1,9 @@
 package stop
 
 import (
-	"fmt"
-
+	"github.com/TeamZenithy/Araha/extensions/embed"
 	"github.com/TeamZenithy/Araha/handler"
+	"github.com/TeamZenithy/Araha/model"
 	"github.com/TeamZenithy/Araha/utils"
 )
 
@@ -16,7 +16,7 @@ func Initialize() {
 			Aliases:              []string{"quit"},
 			RequiredArgumentType: []string{commandArg},
 			Category:             utils.CATEGORY_MUSIC,
-			Usage:                map[string]string{"Required Permission": "**``SPEAK``**", "Description": "``Stop the player and clear the queue``", "Usage": fmt.Sprintf("```css\n%sstop```", utils.Prefix)},
+			Description:          &handler.Description{ReqPermsission: "SPEAK", Usage: "stop"},
 		},
 	)
 }
@@ -27,19 +27,28 @@ const (
 )
 
 func run(ctx handler.CommandContext) error {
-	guild, err := ctx.Session.State.Guild(ctx.Message.GuildID)
-	if err != nil {
-		return nil
-	}
+	e := embed.New(ctx.Session, ctx.Message.ChannelID)
 
-	if utils.IsInVoiceWithMusic(guild, ctx.Message.Author.ID) {
-		if returnedMessage := utils.LeaveAndDestroy(ctx.Session, ctx.Message.GuildID); returnedMessage != "" {
-			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:ErrStopped")+"\n"+returnedMessage)
+	if _, ok := model.Music[ctx.Message.GuildID]; ok {
+		guild, err := ctx.Session.State.Guild(ctx.Message.GuildID)
+		if err != nil {
+			return nil
+		}
+
+		if utils.IsInVoiceWithMusic(guild, ctx.Message.Author.ID) {
+			if returnedMessage := utils.LeaveAndDestroy(ctx.Session, ctx.Message.GuildID); returnedMessage != "" {
+				ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:ErrStopped")+"\n"+returnedMessage)
+			} else {
+				e.SendEmbed(embed.INFO, ctx.T("music:Stopped"))
+				return nil
+			}
 		} else {
-			ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:Stopped"))
+			e.SendEmbed(embed.BADREQ, ctx.T("music:BRNotPlaying"))
+			return nil
 		}
 	} else {
-		_, err = ctx.Session.ChannelMessageSend(ctx.Message.ChannelID, ctx.T("music:BRNotPlaying"))
+		e.SendEmbed(embed.BADREQ, ctx.T("music:NoMusic"))
 	}
+
 	return nil
 }

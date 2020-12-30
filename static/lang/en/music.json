@@ -1,0 +1,118 @@
+[
+  {
+    "name": "NotInVoiceChannel",
+    "text": "You are currently not in a voice channel."
+  },
+  {
+    "name": "SongInfo",
+    "text": "[{}]({})\nUploader: {}"
+  },
+  {
+    "name": "ReqBy",
+    "text": "Requested by : {}#{}"
+  },
+  {
+    "name": "Duration",
+    "text": "Duration"
+  },
+  {
+    "name": "ETA",
+    "text": "Estimated time"
+  },
+  {
+    "name": "BRUrl",
+    "text": "Please enter a URL or a search keyword."
+  },
+  {
+    "name": "BRTime",
+    "text": "Please enter a right time."
+  },
+  {
+    "name": "BRTime2",
+    "text": "The requested time is longer than or same as music's duration."
+  },
+  {
+    "name": "BRTwitch",
+    "text": "Using bot to watch twitch is not right. Use your browser instead."
+  },
+  {
+    "name": "BRVoiceChannel",
+    "text": "The bot is already in other voice channel."
+  },
+  {
+    "name": "BRNotPlaying",
+    "text": "You are currently not playing anything."
+  },
+  {
+    "name": "BRSearch",
+    "text": "Cannot find the sone with your keyword. Use another keyword instead."
+  },
+  {
+    "name": "ErrQuery",
+    "text": "Something went wrong when searching the song. Please try again."
+  },
+  {
+    "name": "ErrLoad",
+    "text": "Cannot load the song you requested. Please try again."
+  },
+  {
+    "name": "NoMusic",
+    "text": "Currently no songs are playing on this server."
+  },
+  {
+    "name": "SeekTo",
+    "text": ":stopwatch: Seeking to {} seconds."
+  },
+  {
+    "name": "Shuffled",
+    "text": "Suffled the playlist."
+  },
+  {
+    "name": "VoteAdded",
+    "text": "Skip vote added! Needs {} more votes to skip. ({}/{})"
+  },
+  {
+    "name": "ErrStopped",
+    "text": "The music might not stopped."
+  },
+  {
+    "name": "Stopped",
+    "text": "Music has been stopped playing."
+  },
+  {
+    "name": "BRNumber",
+    "text": "Enter natural numbers in 1~200."
+  },
+  {
+    "name": "Volume",
+    "text": "Volume has been changed from **{}%** to **{}%**."
+  },
+  {
+    "name": "CurVolume",
+    "text": "Current Volume is **{}%**."
+  },
+  {
+    "name": "AddedQueue",
+    "text": "**{}** has been added to the queue."
+  },
+  {
+    "name": "AddedPlaylistQueue",
+    "text": "**{}** song(s) has been added to the queue."
+  },
+  {
+    "name": "MoreSong",
+    "text": "You can only view up to 5 playlists in Discord. [Site Shortcut]({})"
+  },
+  {
+    "name":"NowPlaying",
+    "text":"Now Playing"
+  },
+  {
+    "name":"MoreSongName",
+    "text":"Do you want to see more queue?"
+  },
+  {
+    "name":"MusicQueue",
+    "text":"Music Queue"
+  }
+]
