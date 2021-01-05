@@ -7,88 +7,88 @@
     "name": "SongInfo",
     "text": "[{}]({})\n업로더: {}"
   },
- {
-    "name":"ReqBy",
+  {
+    "name": "ReqBy",
     "text": "{}#{}가 요청함"
   },
- {
+  {
     "name": "Duration",
     "text": "길이"
   },
   {
-    "name":"ETA",
+    "name": "ETA",
     "text": "남은시간"
   },
- {
-    "name":"BRUrl",
+  {
+    "name": "BRUrl",
     "text": "Url또는 검색어를 입력해주세요."
   },
- {
-    "name":"BRTime",
+  {
+    "name": "BRTime",
     "text": "올바른 시간을 입력해주세요."
   },
-{
-    "name":"BRTime2",
+  {
+    "name": "BRTime2",
     "text": "요청한 시간이 곡의 시간과 길거나 같습니다."
   },
-{
-    "name":"BRTwitch",
+  {
+    "name": "BRTwitch",
     "text": "봇을 이용하여 트위치를 시청하는것은 좋지 않습니다. 브라우저를 대신 이용해주세요."
   },
-{
-    "name":"BRVoiceChannel",
+  {
+    "name": "BRVoiceChannel",
     "text": "이미 다른 음성채널에 봇이 들어가 있습니다."
   },
-{
-    "name":"BRNotPlaying",
+  {
+    "name": "BRNotPlaying",
     "text": "현재 노래를 재생중이지 않습니다."
   },
-{
-    "name":"BRSearch",
+  {
+    "name": "BRSearch",
     "text": "검색어와 일치하는 노래를 찾지 못하였습니다. 다른 검색어를 입력해주세요."
   },
-{
-    "name":"ErrQuery",
+  {
+    "name": "ErrQuery",
     "text": "노래를 찾는도중 문제가 생겼습니다. 다시 시도해주세요."
   },
-{
-    "name":"ErrLoad",
+  {
+    "name": "ErrLoad",
     "text": "노래를 불러오지 못했습니다. 다시 시도해주세요."
   },
   {
-    "name":"NoMusic",
+    "name": "NoMusic",
     "text": "서버에서 재생중인 곡이 없습니다"
   },
   {
-    "name":"SeekTo",
+    "name": "SeekTo",
     "text": ":stopwatch: {}초로 이동합니다."
   },
-{
-    "name":"Shuffled",
+  {
+    "name": "Shuffled",
     "text": "재생목록을 섞었습니다"
   },
   {
-    "name":"VoteAdded",
+    "name": "VoteAdded",
     "text": "투표가 추가되었습니다! {}개의 투표가 더 필요합니다. ({}/{})"
   },
- {
-    "name":"ErrStopped",
+  {
+    "name": "ErrStopped",
     "text": "재생이 중지되지 않았을 수 있습니다."
   },
- {
-    "name":"Stopped",
+  {
+    "name": "Stopped",
     "text": "재생이 중지되었습니다."
   },
   {
-    "name":"BRNumber",
+    "name": "BRNumber",
     "text": "1~200 사이의 자연수를 입력해주세요."
   },
   {
-    "name":"Volume",
+    "name": "Volume",
     "text": "볼륨이 **{}%**에서 **{}%**로 변경되었습니다."
   },
   {
-    "name":"CurVolume",
+    "name": "CurVolume",
     "text": "현재 볼륨은 **{}%** 입니다."
   },
   {
@@ -104,15 +104,31 @@
     "text": "디스코드에서는 최대 5개까지의 재생목록만 볼 수 있습니다. [사이트 바로기가]({})"
   },
   {
-    "name":"NowPlaying",
-    "text":"현재 재생중"
+    "name": "NowPlaying",
+    "text": "현재 재생중"
   },
   {
-    "name":"MoreSongName",
-    "text":"더 많은 대기열을 보고 싶나요?"
+    "name": "MoreSongName",
+    "text": "더 많은 대기열을 보고 싶나요?"
   },
   {
-    "name":"MusicQueue",
-    "text":"음악 대기열"
+    "name": "MusicQueue",
+    "text": "음악 대기열"
+  },
+  {
+    "name": "AlreadyPaused",
+    "text": "노래가 이미 일시정지 상태입니다."
+  },
+  {
+    "name": "Paused",
+    "text": "일시정지 되었습니다."
+  },
+  {
+    "name": "AlreadyPlaying",
+    "text": "노래가 이미 재생중입니다."
+  },
+  {
+    "name": "Resume",
+    "text": "노래를 다시 재생합니다"
   }
 ]

@@ -1,50 +1,59 @@
 [
-    {
-        "name": "help",
-        "text": "Shows all commands of Araha."
-    },
-    {
-        "name": "ping",
-        "text": "Checks this bot's ping."
-    },
-    {
-        "name": "whoami",
-        "text": "Checks your role."
-    },
-    {
-        "name": "nowplaying",
-        "text": "Shows information about currently playing."
-    },
-    {
-        "name": "play",
-        "text": "Plays the requested URL or search the song keyword.\nIf you want to play the SoundCloud music, please put `$soundcloud`in the command."
-    },
-    {
-        "name": "queue",
-        "text": "Shows the current queue."
-    },
-    {
-        "name": "seek",
-        "text": "Seeks the song which the time you requested."
-    },
-    {
-        "name": "shuffle",
-        "text": "Shuffles the queue."
-    },
-    {
-        "name": "skip",
-        "text": "Skips the current song."
-    },
-    {
-        "name": "stop",
-        "text": "Stops the song and clears the queue."
-    },
-    {
-        "name": "setlang",
-        "text": "Set language for user or server."
-    },
-    {
-        "name": "volume",
-        "text": "Changes the music volume."
-    }
+  {
+    "name": "help",
+    "text": "Shows all commands of Araha."
+  },
+  {
+    "name": "ping",
+    "text": "Checks this bot's ping."
+  },
+  {
+    "name": "whoami",
+    "text": "Checks your role."
+  },
+  {
+    "name": "nowplaying",
+    "text": "Shows information about currently playing."
+  },
+  {
+    "name": "play",
+    "text": "Plays the requested URL or search the song keyword.\nIf you want to play the SoundCloud music, please put `$soundcloud`in the command."
+  },
+  {
+    "name": "queue",
+    "text": "Shows the current queue."
+  },
+  {
+    "name": "seek",
+    "text": "Seeks the song which the time you requested."
+  },
+  {
+    "name": "shuffle",
+    "text": "Shuffles the queue."
+  },
+  {
+    "name": "skip",
+    "text": "Skips the current song."
+  },
+  {
+    "name": "stop",
+    "text": "Stops the song and clears the queue."
+  },
+  {
+    "name": "setlang",
+    "text": "Set language for user or server."
+  },
+  {
+    "name": "volume",
+    "text": "Changes the music volume."
+  },
+  {
+    "name": "resume",
+    "text": "Resume Playing."
+  },
+  {
+    "name": "pause",
+    "text": "Pause Playing."
+  }
 ]
+

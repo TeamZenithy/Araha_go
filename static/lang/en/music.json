@@ -104,15 +104,31 @@
     "text": "You can only view up to 5 playlists in Discord. [Site Shortcut]({})"
   },
   {
-    "name":"NowPlaying",
-    "text":"Now Playing"
+    "name": "NowPlaying",
+    "text": "Now Playing"
   },
   {
-    "name":"MoreSongName",
-    "text":"Do you want to see more queue?"
+    "name": "MoreSongName",
+    "text": "Do you want to see more queue?"
   },
   {
-    "name":"MusicQueue",
-    "text":"Music Queue"
+    "name": "MusicQueue",
+    "text": "Music Queue"
+  },
+  {
+    "name": "AlreadyPaused",
+    "text": "Player is already paused"
+  },
+  {
+    "name": "Paused",
+    "text": "The player has been paused"
+  },
+  {
+    "name": "AlreadyPlaying",
+    "text": "Player is already Playing"
+  },
+  {
+    "name": "Resume",
+    "text": "Resume song"
   }
 ]

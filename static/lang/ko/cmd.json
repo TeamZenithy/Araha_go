@@ -1,50 +1,59 @@
 [
-    {
-        "name": "help",
-        "text": "모든 명령어의 도움말을 표시합니다."
-    },
-    {
-        "name": "ping",
-        "text": "봇의 핑을 측정합니다."
-    },
-    {
-        "name": "whoami",
-        "text": "권한을 확인합니다."
-    },
-    {
-        "name": "nowplaying",
-        "text": "현제 재생중인 곡의 정보를 보여줍니다."
-    },
-    {
-        "name": "play",
-        "text": "요청한 URL또는 곡을 검색하여 재생해줍니다.\n만약 SoundCloud노래를 재생하고 싶으시면, `$soundcloud`라는 글자를 넣어주세요."
-    },
-    {
-        "name": "queue",
-        "text": "현제 재생목록을 보여줍니다."
-    },
-    {
-        "name": "seek",
-        "text": "재생중인 곡의 위치를 변경합니다."
-    },
-    {
-        "name": "shuffle",
-        "text": "재생목록을 섞습니다."
-    },
-    {
-        "name": "skip",
-        "text": "현재 곡을 건너뜁니다."
-    },
-    {
-        "name": "stop",
-        "text": "재생을 멈추고 재생목록을 초기화 합니다."
-    },
-    {
-        "name": "setlang",
-        "text": "사용자 또는 서버의 언어를 설정합니다."
-    },
-    {
-        "name": "volume",
-        "text": "음악 볼륨을 조절합니다."
-    }
+  {
+    "name": "help",
+    "text": "모든 명령어의 도움말을 표시합니다."
+  },
+  {
+    "name": "ping",
+    "text": "봇의 핑을 측정합니다."
+  },
+  {
+    "name": "whoami",
+    "text": "권한을 확인합니다."
+  },
+  {
+    "name": "nowplaying",
+    "text": "현제 재생중인 곡의 정보를 보여줍니다."
+  },
+  {
+    "name": "play",
+    "text": "요청한 URL또는 곡을 검색하여 재생해줍니다.\n만약 SoundCloud노래를 재생하고 싶으시면, `$soundcloud`라는 글자를 넣어주세요."
+  },
+  {
+    "name": "queue",
+    "text": "현제 재생목록을 보여줍니다."
+  },
+  {
+    "name": "seek",
+    "text": "재생중인 곡의 위치를 변경합니다."
+  },
+  {
+    "name": "shuffle",
+    "text": "재생목록을 섞습니다."
+  },
+  {
+    "name": "skip",
+    "text": "현재 곡을 건너뜁니다."
+  },
+  {
+    "name": "stop",
+    "text": "재생을 멈추고 재생목록을 초기화 합니다."
+  },
+  {
+    "name": "setlang",
+    "text": "사용자 또는 서버의 언어를 설정합니다."
+  },
+  {
+    "name": "volume",
+    "text": "음악 볼륨을 조절합니다."
+  },
+  {
+    "name": "resume",
+    "text": "곡을 다시 재생합니다."
+  },
+  {
+    "name": "pause",
+    "text": "곡을 일시정지 합니다."
+  }
 ]
+
