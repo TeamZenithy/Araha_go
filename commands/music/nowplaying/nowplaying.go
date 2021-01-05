@@ -26,7 +26,7 @@ func Initialize() {
 }
 
 const (
-	commandName = "nowplayig"
+	commandName = "nowplaying"
 	commandArg  = "none"
 )
 

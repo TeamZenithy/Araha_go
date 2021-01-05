@@ -42,14 +42,14 @@ func main() {
 	manager.AddHandler(events.VoiceStateUpdate)
 
 	// !!!!!! Change this when release
-	recommended, err := manager.GetRecommendedCount()
-	if err != nil {
-		logger.Fatal("Failed getting recommended shard count")
-	}
-	if recommended < 2 {
-		manager.SetNumShards(5)
-	}
-	// manager.SetNumShards(1)
+	// recommended, err := manager.GetRecommendedCount()
+	// if err != nil {
+	// 	logger.Fatal("Failed getting recommended shard count")
+	// }
+	// if recommended < 2 {
+	// 	manager.SetNumShards(5)
+	// }
+	manager.SetNumShards(1)
 
 	logger.Info("Starting the shard manager")
 	manager.Init()
