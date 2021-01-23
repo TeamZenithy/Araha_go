@@ -5,8 +5,10 @@ import (
 	"github.com/TeamZenithy/Araha/commands/general/ping"
 	"github.com/TeamZenithy/Araha/commands/general/whoami"
 	"github.com/TeamZenithy/Araha/commands/music/nowplaying"
+	"github.com/TeamZenithy/Araha/commands/music/pause"
 	"github.com/TeamZenithy/Araha/commands/music/play"
 	"github.com/TeamZenithy/Araha/commands/music/queue"
+	"github.com/TeamZenithy/Araha/commands/music/resume"
 	"github.com/TeamZenithy/Araha/commands/music/seek"
 	"github.com/TeamZenithy/Araha/commands/music/shuffle"
 	"github.com/TeamZenithy/Araha/commands/music/skip"
@@ -32,5 +34,7 @@ func InitCommands() {
 	volume.Initialize()
 	shuffle.Initialize()
 	nowplaying.Initialize()
+	pause.Initialize()
+	resume.Initialize()
 	locale.Initialize()
 }

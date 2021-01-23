@@ -1,7 +1,14 @@
 package structure
 
+import (
+	"github.com/BurntSushi/toml"
+	"github.com/TeamZenithy/Araha/logger"
+)
+
+var config ConfigStruct
+
 //Config for discord bot.
-type Config struct {
+type ConfigStruct struct {
 	Prefix                string
 	Token                 string
 	Owners                []string
@@ -13,4 +20,15 @@ type Config struct {
 	RedisHost             string
 	RedisPort             string
 	RedisPass             string
+	Release               bool
+}
+
+func LoadConfig() {
+	if _, err := toml.DecodeFile("config.toml", &config); err != nil {
+		logger.Fatal(err.Error())
+	}
+}
+
+func Config() *ConfigStruct {
+	return &config
 }

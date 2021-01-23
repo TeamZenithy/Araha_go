@@ -6,33 +6,6 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-//Prefix for global
-var Prefix string = ""
-
-//Token for global
-var Token string = ""
-
-//Owners for global
-var Owners []string = []string{""}
-
-//ShardLogChannel for global
-var ShardLogChannel = ""
-
-//ShardStatusLogChannel for global
-var ShardStatusLogChannel = ""
-
-//LavalinkConfig for global
-var LavalinkConfig []string = []string{""}
-
-//RedisHost for global
-var RedisHost = ""
-
-//RedisPort for global
-var RedisPort = ""
-
-//RedisPass for global
-var RedisPass = ""
-
 //Lavalink is not type
 var Lavalink *audioengine.Lavalink
 

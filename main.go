@@ -3,12 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	_ "net/http/pprof"
 	"os"
 	"os/signal"
 	"syscall"
 
+	. "github.com/TeamZenithy/Araha/config"
 	"github.com/TeamZenithy/Araha/db"
 	"github.com/TeamZenithy/Araha/events"
 	"github.com/TeamZenithy/Araha/initializer"
@@ -19,37 +19,34 @@ import (
 )
 
 func main() {
-	rawConfig, errFindConfigFile := ioutil.ReadFile("config.toml") // just pass the file name
-	if errFindConfigFile != nil {
-		logger.Fatal(fmt.Sprintf("Error while load config file: %s", errFindConfigFile.Error()))
-		return
-	}
-	utils.LoadConfig(string(rawConfig))
+	LoadConfig()
 
 	initializer.InitLang()
 	db.InitRedis()
 
 	go web.InitWeb()
 
-	manager := sharder.New("Bot " + utils.Token)
+	manager := sharder.New("Bot " + Config().Token)
 	manager.Name = "Araha"
-	manager.LogChannel = utils.ShardLogChannel
-	manager.StatusMessageChannel = utils.ShardStatusLogChannel
+	manager.LogChannel = Config().ShardLogChannel
+	manager.StatusMessageChannel = Config().ShardStatusLogChannel
 	// register events
 	manager.AddHandler(events.Ready)
 	manager.AddHandler(events.MessageCreate)
 	manager.AddHandler(events.VoiceServerUpdate)
 	manager.AddHandler(events.VoiceStateUpdate)
 
-	// !!!!!! Change this when release
-	// recommended, err := manager.GetRecommendedCount()
-	// if err != nil {
-	// 	logger.Fatal("Failed getting recommended shard count")
-	// }
-	// if recommended < 2 {
-	// 	manager.SetNumShards(5)
-	// }
-	manager.SetNumShards(1)
+	if Config().Release {
+		recommended, err := manager.GetRecommendedCount()
+		if err != nil {
+			logger.Fatal("Failed getting recommended shard count")
+		}
+		if recommended < 2 {
+			manager.SetNumShards(5)
+		}
+	} else {
+		manager.SetNumShards(1)
+	}
 
 	logger.Info("Starting the shard manager")
 	manager.Init()

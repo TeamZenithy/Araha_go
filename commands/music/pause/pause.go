@@ -49,6 +49,7 @@ func run(ctx handler.CommandContext) error {
 		if ms.Player.Paused() {
 			e.SendEmbed(embed.BADREQ, ctx.T("music:AlreadyPaused"))
 		} else {
+			ms.Player.Pause(true)
 			e.SendEmbed(embed.BADREQ, ctx.T("music:Paused"))
 		}
 	} else {

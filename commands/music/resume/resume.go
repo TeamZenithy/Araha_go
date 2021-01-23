@@ -1,4 +1,4 @@
-package pause
+package resume
 
 import (
 	"github.com/TeamZenithy/Araha/extensions/embed"
@@ -49,6 +49,7 @@ func run(ctx handler.CommandContext) error {
 		if !ms.Player.Paused() {
 			e.SendEmbed(embed.BADREQ, ctx.T("music:AlreadyPlaying"))
 		} else {
+			ms.Player.Pause(false)
 			e.SendEmbed(embed.BADREQ, ctx.T("music:Resume"))
 		}
 	} else {
