@@ -1,9 +1,10 @@
 package objects
 
 import (
-	"github.com/TeamZenithy/Araha/extensions"
 	"errors"
 	"fmt"
+
+	"github.com/TeamZenithy/Araha/extensions"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -20,8 +21,20 @@ func ExtendMessage(message *discordgo.Message, session *discordgo.Session) *Exte
 }
 
 // short form for message.session.Guild(message.GuildID)
-func (message *ExtendedMessage) Guild() (*discordgo.Guild, error) {
-	return message.session.Guild(message.GuildID)
+func (message *ExtendedMessage) Guild() *ExtendedGuild {
+	guild, err := message.session.State.Guild(message.GuildID)
+	if err != nil {
+		return nil
+	}
+	return ExtendGuild(guild, message.session)
+}
+
+func (message *ExtendedMessage) Member() *ExtendedMember {
+	member, err := message.session.GuildMember(message.GuildID, message.ID)
+	if err != nil {
+		return nil
+	}
+	return ExtendMember(member, message.session)
 }
 
 // short form for message.session.ChannelMessageSend(message.ChannelID, content)
@@ -40,17 +53,16 @@ func (message *ExtendedMessage) Channel() (*discordgo.Channel, error) {
 }
 
 func (message *ExtendedMessage) AuthorMember() (*discordgo.Member, error) {
-	var messageGuild, messageGuildErr = message.Guild()
-	if messageGuildErr != nil {
-		return nil, messageGuildErr
+	messageGuild := message.Guild()
+	if messageGuild == nil {
+		return nil, errors.New("")
 	}
-	var extendedMessageGuild = ExtendGuild(messageGuild, message.session)
-	var extendedMessageGuildMembers, extendedMessageGuildMembersErr = extendedMessageGuild.GetMembers()
-	if extendedMessageGuildMembersErr != nil {
-		return nil, extendedMessageGuildMembersErr
+	guildMembers, err := messageGuild.GetMembers()
+	if err != nil {
+		return nil, err
 	}
 
-	for _, member := range extendedMessageGuildMembers {
+	for _, member := range guildMembers {
 		if member.User.ID == message.Author.ID {
 			return member, nil
 		}

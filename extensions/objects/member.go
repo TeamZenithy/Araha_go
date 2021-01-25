@@ -17,21 +17,23 @@ func ExtendMember(member *discordgo.Member, session *discordgo.Session) *Extende
 	}
 }
 
-func (member *ExtendedMember) Guild() (*discordgo.Guild, error) {
-	return member.session.Guild(member.GuildID)
+func (member *ExtendedMember) Guild() (*ExtendedGuild, error) {
+	guild, err := member.session.Guild(member.GuildID)
+	if err != nil {
+		return nil, err
+	}
+	return ExtendGuild(guild, member.session), nil
 }
 
 func (member *ExtendedMember) HasAllPermissions(requestedPermissions ...int) (bool, error) {
-	var memberGuild, memberGuildErr = member.Guild()
-	if memberGuildErr != nil {
-		return false, memberGuildErr
+	memberGuild, err := member.Guild()
+	if err != nil {
+		return false, err
 	}
 
 	if memberGuild.OwnerID == member.User.ID {
 		return true, nil
 	}
-
-	var extendedGuild = ExtendGuild(memberGuild, member.session)
 
 	if len(member.Roles) == 0 {
 		var reGetMember, reGetMemberErr = member.session.GuildMember(member.GuildID, member.User.ID)
@@ -41,7 +43,7 @@ func (member *ExtendedMember) HasAllPermissions(requestedPermissions ...int) (bo
 		member.Roles = reGetMember.Roles
 	}
 
-	var roles, rolesErr = extendedGuild.GetRolesSlice(member.Roles)
+	var roles, rolesErr = memberGuild.GetRolesSlice(member.Roles)
 	if rolesErr != nil {
 		return false, rolesErr
 	}

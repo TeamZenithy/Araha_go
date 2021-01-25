@@ -22,6 +22,7 @@ type TrLocale struct {
 type Tr struct {
 	TrTexts map[string]*TrLocale
 }
+
 type HFType func(string, ...string) string
 
 func NewTrLocale(folder string) *TrLocale {

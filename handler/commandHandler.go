@@ -1,8 +1,13 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"strings"
+
+	"github.com/TeamZenithy/Araha/logger"
+
+	"github.com/TeamZenithy/Araha/extensions/embed"
 
 	"github.com/TeamZenithy/Araha/lang"
 	"github.com/TeamZenithy/Araha/utils"
@@ -12,8 +17,10 @@ import (
 	"github.com/TeamZenithy/Araha/extensions/objects"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/ztrue/tracerr"
 )
+
+type Argument map[string]string
+type HandlerFunc func(c *Context) bool
 
 const (
 	keywordArgumentPrefix = "--"
@@ -22,7 +29,7 @@ const (
 
 var (
 	//Commands is a map of string
-	Commands map[string]Command
+	Commands map[string]*Cmd
 	//Aliases is a map of string
 	Aliases map[string]string
 )
@@ -32,8 +39,29 @@ type CommandContext struct {
 	Session   *discordgo.Session
 	Message   *objects.ExtendedMessage
 	Arguments map[string]string
+	arguments Argument
 	T         lang.HFType
 	Locale    string
+}
+
+type Context struct {
+	Session *discordgo.Session
+	Msg     *objects.ExtendedMessage
+	Embed   *embed.Embed
+	args    Argument
+	T       lang.HFType
+	Locale  string
+	values  map[string]interface{}
+}
+
+type Cmd struct {
+	Run         func(c *Context)
+	Middlewares []HandlerFunc
+	Name        string
+	Category    string
+	Aliases     []string
+	Args        []string
+	Usage       string
 }
 
 //Command includes Run(function), Name(list of srings), Required args type(list of strings), and Usage(map of string and string)
@@ -54,174 +82,145 @@ type Description struct {
 
 //InitCommands Initialize the Commands map
 func InitCommands() {
-	Commands = make(map[string]Command)
+	Commands = make(map[string]*Cmd)
 	Aliases = make(map[string]string)
 }
 
+func (c *Context) Set(key string, value interface{}) {
+	c.values[key] = value
+}
+
+func (c *Context) Get(key string) interface{} {
+	return c.values[key]
+}
+
+func (c *Context) Arg(key string) string {
+	return c.args[key]
+}
+
 //AddCommand Adds a command to the Commands map
-func AddCommand(command Command) {
-	// for _, name := range command.Names {
-	// 	Commands[name] = command
-	// }
-	Commands[command.Name] = command
-	for _, alias := range command.Aliases {
-		Aliases[alias] = command.Name
+func AddCommand(cmd *Cmd) {
+	Commands[cmd.Name] = cmd
+	for _, alias := range cmd.Aliases {
+		Aliases[alias] = cmd.Name
 	}
+	logger.Info("Command Added: " + cmd.Name)
+}
+
+func FindCommand(name string) *Cmd {
+	if command, ok := Commands[name]; ok {
+		return command
+	} else if command, ok := Aliases[name]; ok {
+		return Commands[command]
+	}
+	return nil
 }
 
 //HandleCreatedMessage Handle a message creation event
-func HandleCreatedMessage(session *discordgo.Session, message *discordgo.MessageCreate, prefix string) {
-	if message.Author.ID == session.State.User.ID || message.Author.Bot {
+func HandleCreatedMessage(s *discordgo.Session, m *discordgo.MessageCreate, prefix string) {
+	if m.Author.Bot {
 		return
 	}
-	if !strings.HasPrefix(message.Content, prefix) {
+	if !strings.HasPrefix(m.Content, prefix) {
 		return
 	}
 
-	var endIndex = strings.Index(message.Content, stringSeparator)
-
-	var commandName string
-
-	if endIndex == -1 {
-		commandName = message.Content[len(prefix):]
-	} else {
-		commandName = message.Content[len(prefix):strings.Index(message.Content, stringSeparator)]
+	list := strings.Split(m.Content, " ")
+	cmdName := string([]rune(list[0])[len(prefix):])
+	var args []string
+	if len(list) > 1 {
+		args = list[1:]
 	}
-
-	// var command, exists = Commands[commandName]
-
-	// if !exists {
-	// 	return
-	// }
-
-	// var context = CommandContext{
-	// 	Session: session,
-	// 	Message: objects.ExtendMessage(message.Message, session),
-	// 	Arguments: parseArguments(
-	// 		message.Content,
-	// 		command.RequiredArgumentType,
-	// 		command.Usage),
-	// }
-
-	// var err = command.Run(context)
 
 	var err error = nil
 
-	gcommand := Command{}
+	command := FindCommand(cmdName)
 
-	if command, ok := Commands[commandName]; ok {
-		gcommand = command
-	} else if command, ok := Aliases[commandName]; ok {
-		gcommand = Commands[command]
-	} else {
+	if command == nil {
 		return
 	}
 
 	userLocale := ""
-	l, err := db.FindUserLocale(message.Author.ID)
+	l, err := db.FindUserLocale(m.Author.ID)
 	if err != nil {
-		// TODO: Send Log
-		return
+		fmt.Println("Error while parsing locale")
+		userLocale = "en"
 	} else if l == "" {
-		l, err := db.FindGuildLocale(message.GuildID)
+		l, err := db.FindGuildLocale(m.GuildID)
 		if err != nil {
-			// TODO: Send Log
-			return
+			fmt.Println("Error while parsing locale")
+			userLocale = "en"
 		}
 		userLocale = l
 	} else {
 		userLocale = l
 	}
-	context := CommandContext{
-		Session: session,
-		Message: objects.ExtendMessage(message.Message, session),
-		Arguments: parseArguments(
-			message.Content,
-			gcommand.RequiredArgumentType,
-			map[string]string{}),
-		T:      utils.TR.GetHandlerFunc(userLocale, "en"),
-		Locale: userLocale,
+	T := utils.TR.GetHandlerFunc(userLocale, "en")
+	parsed, err := ParseArgument(command.Args, args)
+	e := embed.New(s, m.ChannelID)
+	if err != nil {
+		e.SendEmbed(embed.BADREQ, T("error:ErrSyntex", prefix, command.Name))
+		return
 	}
 
-	err = gcommand.Run(context)
+	context := &Context{
+		Session: s,
+		Msg:     objects.ExtendMessage(m.Message, s),
+		args:    *parsed,
+		Embed:   e,
+		T:       T,
+		Locale:  userLocale,
+		values:  make(map[string]interface{}),
+	}
 
-	if err != nil {
-		tracerr.PrintSourceColor(err)
-		_, err = session.ChannelMessageSend(
-			message.ChannelID,
-			fmt.Sprint("An Error occurred while executing the command!\n", err))
-		if err != nil {
-			tracerr.PrintSourceColor(err)
-			_, err = session.ChannelMessageSend(
-				message.ChannelID,
-				"An Error occurred while executing the command and sending the error message!")
-			if err != nil {
-				tracerr.PrintSourceColor(err)
-			}
+	for _, d := range command.Middlewares {
+		if result := d(context); !result {
+			return
 		}
 	}
+
+	command.Run(context)
 }
 
-// Parse command arguments
-func parseArguments(
-	content string,
-	expectedPositionalArguments []string,
-	keywordArgumentAliases map[string]string) map[string]string {
+func ParseArgument(arg, content []string) (*Argument, error) {
+	parsed := Argument{}
 
-	var separated = strings.Split(content, stringSeparator)
+	startIndex := 0
 
-	// do not process the command name and prefix
-	separated = separated[1:]
-
-	var returnArguments = make(map[string]string)
-
-	// if len(separated) == 0 {
-	//	return returnArguments
-	// }
-
-	var currentPosition = 0
-
-	for len(separated) > 0 {
-		// remove first element from slice
-		var currentItem = separated[0]
-		separated = separated[1:]
-
-		var currentArgumentValue []string
-
-		if strings.HasPrefix(currentItem, keywordArgumentPrefix) {
-			for len(separated) > 0 && !strings.HasPrefix(separated[0], keywordArgumentPrefix) {
-				_ = append(currentArgumentValue, separated[0])
-				separated = separated[1:]
-				currentPosition++
+	argLen := len(arg)
+	if argLen < 1 {
+		return &parsed, nil
+	}
+	argLast := arg[argLen-1]
+	if strings.HasPrefix(argLast, "?") {
+		if argLen < 2 {
+			if len(content) < 1 {
+				return &parsed, nil
 			}
+			parsed[strings.TrimPrefix(argLast, "?")] = content[0]
+			return &parsed, nil
+		}
+		contentLen := len(content)
+		lastItem := content[contentLen-1]
+		if strings.HasPrefix(lastItem, "--") {
+			argLast = strings.TrimPrefix(argLast, "?")
+			parsed[argLast] = strings.ReplaceAll(lastItem, "--", "")
+			content = content[0 : contentLen-1]
+		}
+		arg = arg[0 : argLen-1]
+	}
+
+	if len(content) < len(arg) {
+		return &Argument{}, errors.New("Error Parse")
+	}
+
+	for _, d := range arg {
+		if strings.HasPrefix(d, "+") {
+			parsed[strings.TrimLeft(d, "+")] = strings.Join(content[startIndex:], " ")
 		} else {
-			if currentPosition >= len(expectedPositionalArguments) {
-				var _, exists = returnArguments[expectedPositionalArguments[len(expectedPositionalArguments)-1]]
-				if exists {
-					// The length checks should prevent the value from being nil
-					//goland:noinspection GoNilness
-					returnArguments[expectedPositionalArguments[len(expectedPositionalArguments)-1]] += stringSeparator + currentItem
-				} else {
-					//goland:noinspection GoNilness
-					returnArguments[expectedPositionalArguments[len(expectedPositionalArguments)-1]] = currentItem
-				}
-			} else {
-				//goland:noinspection GoNilness
-				returnArguments[expectedPositionalArguments[currentPosition]] = currentItem
-			}
-		}
-
-		currentPosition++
-	}
-
-	//goland:noinspection GoNilness
-	for key, value := range returnArguments {
-		key = strings.ToLower(key)
-		var _, exists = keywordArgumentAliases[key]
-		if exists {
-			returnArguments[keywordArgumentAliases[key]] = value
+			parsed[d] = content[startIndex]
+			startIndex++
 		}
 	}
-
-	return returnArguments
+	return &parsed, nil
 }

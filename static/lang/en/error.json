@@ -1,10 +1,14 @@
 [
-    {
-        "name":"ErrWriteData",
-        "text":"Error while writing the data.\n"
-    },
-    {
-        "name":"ErrAddQueue",
-        "text":"Error while adding songs to the queue. Please try again.\n"
-    }
+  {
+    "name": "ErrWriteData",
+    "text": "Error while writing the data."
+  },
+  {
+    "name": "ErrAddQueue",
+    "text": "Error while adding songs to the queue. Please try again."
+  },
+  {
+    "name": "ErrSyntex",
+    "text": "Bad request. Please check usage with {}help {}"
+  }
 ]

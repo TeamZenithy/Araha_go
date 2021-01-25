@@ -1,6 +1,7 @@
 package initializer
 
 import (
+	. "github.com/TeamZenithy/Araha/config"
 	audioengine "github.com/TeamZenithy/Araha/engine/audio"
 	"github.com/TeamZenithy/Araha/logger"
 	"github.com/TeamZenithy/Araha/model"
@@ -11,7 +12,7 @@ import (
 //InitAudioEngine initialize lavalink client
 func InitAudioEngine(event *discordgo.Ready) {
 	utils.Lavalink = audioengine.NewLavalink("1", event.User.ID)
-	host, port, pass := utils.LavalinkConfig[0], utils.LavalinkConfig[1], utils.LavalinkConfig[2]
+	host, port, pass := Config().LavalinkHost, Config().LavalinkPort, Config().LavalinkPass
 
 	err := utils.Lavalink.AddNodes(audioengine.NodeConfig{
 		REST:      "http://" + host + ":" + port,
