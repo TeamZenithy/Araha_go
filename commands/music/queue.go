@@ -31,7 +31,7 @@ func queue(c *handler.Context) {
 
 	queueLink := "https://araha.b1ackange1.me/" + c.Locale + "/queue/" + c.Msg.GuildID
 	if !Config().Release {
-		queueLink = "https://localhost:9096/" + c.Locale + "/queue/" + c.Msg.GuildID
+		queueLink = "http://localhost:8096/" + c.Locale + "/queue/" + c.Msg.GuildID
 	}
 	lenQueue := len(ms.Queue)
 	loadLen := lenQueue

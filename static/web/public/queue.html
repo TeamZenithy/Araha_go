@@ -21,8 +21,8 @@
     {{ define "card" }}
     <div class="w-full rounded-lg shadow-lg bg-white py-3 px-4 mb-6">
       <div>
-        <a href="{{.Track.Info.URI}}" target="_blank" class="text-lg font-semibold">{{ .Track.Info.Title }}</a>
-        <div class="text-md mt-2">{{ .Track.Info.Author }}</div>
+          <a href="{{.Track.Info.URI}}" target="_blank" class="text-lg font-semibold">{{.index}}. {{ .data.Track.Info.Title }}</a>
+        <div class="text-md mt-2">{{ .data.Track.Info.Author }}</div>
       </div>
     </div>
     {{ end }}
@@ -36,9 +36,9 @@
       {{ if .hasData }} {{ with .queue.Queue}}
       <div>
         <div class="text-xl my-8">Now Playing</div>
-        {{ $d := index . 0}} {{template "card" $d}} {{ $length := len . }} {{ if ne $length 1 }}
+        {{ $d := index . 0}} {{template "card" dict "data" $d "index" 1}}  {{ $length := len . }} {{ if ne $length 1 }}
         <div class="text-xl mt-12 mb-8">Next Songs</div>
-        {{ range $i, $d := . }} {{ if ne $i 0 }} {{template "card" $d}} {{end}} {{end}} {{end}}
+        {{ range $i, $d := . }} {{ if ne $i 0 }} {{ $i2 :=add $i 1}} {{template "card" dict "data" $d "index" $i2 }} {{end}} {{end}} {{end}}
       </div>
       {{end}} {{else}}
       <div class="text-xl">No Queue</div>

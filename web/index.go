@@ -25,10 +25,15 @@ func templateDict(values ...interface{}) (map[string]interface{}, error) {
 	return dict, nil
 }
 
+func templateAdd(a, b int) (int, error) {
+	return a + b, nil
+}
+
 func InitWeb() {
 	r := gin.Default()
 	funcMap := template.FuncMap{
 		"dict": templateDict,
+		"add":  templateAdd,
 	}
 	r.SetFuncMap(funcMap)
 	r.LoadHTMLGlob("static/web/public/*")

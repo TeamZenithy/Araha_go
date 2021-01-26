@@ -34,6 +34,4 @@ func shuffle(c *handler.Context) {
 	queue = append([]model.Song{ms.Queue[0]}, queue...)
 	ms.Queue = queue
 	c.Embed.SendEmbed(embed.INFO, c.T("music:Shuffled"))
-
-	ms.Player.Stop()
 }

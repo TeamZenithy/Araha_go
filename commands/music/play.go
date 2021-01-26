@@ -2,7 +2,6 @@ package music
 
 import (
 	"fmt"
-	"net/url"
 	"strconv"
 	"strings"
 
@@ -43,7 +42,6 @@ func play(c *handler.Context) {
 			c.Embed.SendEmbed(embed.BADREQ, c.T("music:BRTwitch"))
 			return
 		}
-		urlArg = url.QueryEscape(urlArg)
 		tracks, errLoadTracks = node.LoadTracks(utils.QUERY_TYPE_URL, urlArg)
 	} else if c.Arg("platform") == "soundcloud" {
 		tracks, errLoadTracks = node.LoadTracks(utils.QUERY_TYPE_SOUNDCLOUD, urlArg)
@@ -91,38 +89,24 @@ func play(c *handler.Context) {
 		}
 	}
 
-	if tracks.Type != audioengine.TrackLoaded {
-		if tracks.Type == audioengine.LoadFailed {
-			c.Embed.SendEmbed(embed.ERR_BOT, c.T("music:ErrLoad"))
-			return
-		} else if tracks.Type == audioengine.NoMatches {
-			c.Embed.SendEmbed(embed.BADREQ, c.T("music:BRSearch"))
-			return
-		}
-	}
-
-	if tracks.Type == audioengine.PlaylistLoaded {
+	switch tracks.Type {
+	case audioengine.LoadFailed:
+		c.Embed.SendEmbed(embed.ERR_BOT, c.T("music:ErrLoad"))
+	case audioengine.NoMatches:
+		c.Embed.SendEmbed(embed.BADREQ, c.T("music:BRSearch"))
+	case audioengine.PlaylistLoaded:
 		for pos := range tracks.Tracks {
-			errLoadTracks := queueSong(c, tracks.Tracks[pos], ms, len(tracks.Tracks))
-			if errLoadTracks != nil {
-				c.Embed.SendEmbed(embed.ERR_BOT, c.T("error:ErrAddQueue")+errLoadTracks.Error())
-				return
-			}
+			queueSong(c, tracks.Tracks[pos], ms)
 		}
 		c.Embed.SendEmbed(embed.INFO, c.T("music:AddedPlaylistQueue", fmt.Sprint(len(tracks.Tracks))))
-	} else {
+	default:
 		track := tracks.Tracks[0]
-		err = queueSong(c, track, ms, 1)
+		queueSong(c, track, ms)
 		c.Embed.SendEmbed(embed.INFO, c.T("music:AddedQueue", track.Info.Title))
-		if err != nil {
-			_, err = c.Session.ChannelMessageSend(c.Msg.ChannelID, c.T("error:ErrAddQueue")+err.Error())
-			return
-		}
 	}
-	return
 }
 
-func queueSong(ctx *handler.Context, track audioengine.Track, ms *model.MusicStruct, length int) (err error) {
+func queueSong(ctx *handler.Context, track audioengine.Track, ms *model.MusicStruct) {
 	justJoined := false
 	if len(ms.Queue) == 0 {
 		justJoined = true
@@ -135,11 +119,7 @@ func queueSong(ctx *handler.Context, track audioengine.Track, ms *model.MusicStr
 
 	if justJoined {
 		<-ms.PlayerCreated
-		go playSong(ctx, ms.Queue[0], ms, -1)
-		if err != nil {
-			_, err = ctx.Session.ChannelMessageSend(ctx.Msg.ChannelID, "An error occured during song playback. Please try again.\n"+err.Error())
-			return
-		}
+		playSong(ctx, ms.Queue[0], ms, -1)
 	}
 	return
 }
@@ -159,6 +139,8 @@ func playSong(ctx *handler.Context, song model.Song, ms *model.MusicStruct, star
 	e.SendEmbed(embed.INFO, fmt.Sprintf(":musical_note: Now playing: **%s** ", song.Track.Info.Title), embed.AddProfileFooter(user, ctx.T))
 
 	end := <-ms.SongEnd
+	fmt.Println(end)
+	fmt.Printf("%+v\n", ms)
 	if end == "next" {
 		err = playSong(ctx, ms.Queue[0], ms, -1)
 	} else if end == "end" {

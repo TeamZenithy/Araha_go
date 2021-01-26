@@ -34,16 +34,6 @@ var (
 	Aliases map[string]string
 )
 
-//CommandContext is ctx
-type CommandContext struct {
-	Session   *discordgo.Session
-	Message   *objects.ExtendedMessage
-	Arguments map[string]string
-	arguments Argument
-	T         lang.HFType
-	Locale    string
-}
-
 type Context struct {
 	Session *discordgo.Session
 	Msg     *objects.ExtendedMessage
@@ -62,22 +52,6 @@ type Cmd struct {
 	Aliases     []string
 	Args        []string
 	Usage       string
-}
-
-//Command includes Run(function), Name(list of srings), Required args type(list of strings), and Usage(map of string and string)
-type Command struct {
-	Run                  func(ctx CommandContext) error
-	Name                 string
-	Aliases              []string
-	RequiredArgumentType []string
-	Category             int
-	Usage                map[string]interface{}
-	Description          *Description
-}
-
-type Description struct {
-	ReqPermsission string
-	Usage          string
 }
 
 //InitCommands Initialize the Commands map
