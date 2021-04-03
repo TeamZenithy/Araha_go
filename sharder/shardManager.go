@@ -20,6 +20,7 @@ const (
 
 var (
 	VersionString = strconv.Itoa(VersionMajor) + "." + strconv.Itoa(VersionMinor) + "." + strconv.Itoa(VersionPath)
+	CurManager    *Manager
 )
 
 type SessionFunc func(token string) (*discordgo.Session, error)
@@ -32,8 +33,9 @@ type Manager struct {
 	Name string
 
 	// All the shard sessions
-	Sessions      []*discordgo.Session
-	eventHandlers []interface{}
+	Sessions            []*discordgo.Session
+	eventHandlers       []interface{}
+	applicationCommands []interface{}
 
 	// If set logs connection status events to this channel
 	LogChannel string

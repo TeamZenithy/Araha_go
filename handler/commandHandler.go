@@ -79,6 +79,7 @@ func AddCommand(cmd *Cmd) {
 		Aliases[alias] = cmd.Name
 	}
 	logger.Info("Command Added: " + cmd.Name)
+	// sharder.CurManager.Session
 }
 
 func FindCommand(name string) *Cmd {

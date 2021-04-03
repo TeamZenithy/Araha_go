@@ -18,7 +18,7 @@ func MemberHasPermission(s *discordgo.Session, guildID string, userID string, pe
 		if err != nil {
 			return false, err
 		}
-		if role.Permissions&permission != 0 {
+		if role.Permissions&int64(permission) != 0 {
 			return true, nil
 		}
 	}

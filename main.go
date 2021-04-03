@@ -56,6 +56,8 @@ func main() {
 		logger.Fatal(fmt.Sprintf("Failed to start: %s", err.Error()))
 	}
 
+	sharder.CurManager = manager
+
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc

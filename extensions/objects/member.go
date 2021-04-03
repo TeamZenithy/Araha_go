@@ -48,11 +48,11 @@ func (member *ExtendedMember) HasAllPermissions(requestedPermissions ...int) (bo
 		return false, rolesErr
 	}
 
-	var combinedPermissionInteger = 0
+	combinedPermissionInteger := int64(0)
 
 	for _, role := range roles {
 		combinedPermissionInteger |= role.Permissions
 	}
 
-	return permissions.IsPermittedAll(combinedPermissionInteger, requestedPermissions...), nil
+	return permissions.IsPermittedAll(int(combinedPermissionInteger), requestedPermissions...), nil
 }

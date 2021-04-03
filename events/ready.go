@@ -18,8 +18,7 @@ func Ready(session *discordgo.Session, event *discordgo.Ready) {
 
 	logger.Info(fmt.Sprintf("Prefix set to '%s'", config.Get().Prefix))
 
-	var err = session.UpdateStatus(0, fmt.Sprintf("%shelp", config.Get().Prefix))
-	if err != nil {
+	if err := session.UpdateGameStatus(0, fmt.Sprintf("%shelp", config.Get().Prefix)); err != nil {
 		logger.Warn(fmt.Sprintf("Error updating status: %s", err.Error()))
 	}
 	logger.Info(fmt.Sprintf("Logged in as user %s#%s(%s)", session.State.User.Username, session.State.User.Discriminator, session.State.User.ID))
