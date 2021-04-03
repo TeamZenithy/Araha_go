@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	. "github.com/TeamZenithy/Araha/config"
+	"github.com/TeamZenithy/Araha/config"
 	"github.com/TeamZenithy/Araha/extensions/embed"
 	m "github.com/TeamZenithy/Araha/middlewares"
 	"github.com/TeamZenithy/Araha/model"
@@ -30,7 +30,7 @@ func queue(c *handler.Context) {
 	fields := []*discordgo.MessageEmbedField{}
 
 	queueLink := "https://araha.b1ackange1.me/" + c.Locale + "/queue/" + c.Msg.GuildID
-	if !Config().Release {
+	if !config.Get().Release {
 		queueLink = "http://localhost:8096/" + c.Locale + "/queue/" + c.Msg.GuildID
 	}
 	lenQueue := len(ms.Queue)

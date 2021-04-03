@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	. "github.com/TeamZenithy/Araha/config"
+	"github.com/TeamZenithy/Araha/config"
 	"github.com/TeamZenithy/Araha/initializer"
 	"github.com/TeamZenithy/Araha/logger"
 	"github.com/bwmarrin/discordgo"
@@ -12,13 +12,13 @@ import (
 
 //Ready get discord bot's ready events
 func Ready(session *discordgo.Session, event *discordgo.Ready) {
-	if strings.Contains(Config().Prefix, " ") {
+	if strings.Contains(config.Get().Prefix, " ") {
 		logger.Panic("Space in prefix is not allowed. Please remove space.")
 	}
 
-	logger.Info(fmt.Sprintf("Prefix set to '%s'", Config().Prefix))
+	logger.Info(fmt.Sprintf("Prefix set to '%s'", config.Get().Prefix))
 
-	var err = session.UpdateStatus(0, fmt.Sprintf("%shelp", Config().Prefix))
+	var err = session.UpdateStatus(0, fmt.Sprintf("%shelp", config.Get().Prefix))
 	if err != nil {
 		logger.Warn(fmt.Sprintf("Error updating status: %s", err.Error()))
 	}

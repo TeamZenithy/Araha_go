@@ -3,7 +3,7 @@ package general
 import (
 	"strings"
 
-	. "github.com/TeamZenithy/Araha/config"
+	"github.com/TeamZenithy/Araha/config"
 	"github.com/TeamZenithy/Araha/extensions/embed"
 	"github.com/TeamZenithy/Araha/handler"
 	"github.com/bwmarrin/discordgo"
@@ -57,7 +57,7 @@ func help(c *handler.Context) {
 
 			fields = append(fields, &discordgo.MessageEmbedField{
 				Name:   c.T("general:Usage"),
-				Value:  Config().Prefix + cmd.Name + " " + cmd.Usage,
+				Value:  config.Get().Prefix + cmd.Name + " " + cmd.Usage,
 				Inline: true,
 			})
 

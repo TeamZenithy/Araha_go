@@ -1,4 +1,4 @@
-package structure
+package config
 
 import (
 	"github.com/BurntSushi/toml"
@@ -29,6 +29,6 @@ func LoadConfig() {
 	}
 }
 
-func Config() *ConfigStruct {
+func Get() *ConfigStruct {
 	return &config
 }

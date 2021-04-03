@@ -8,7 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	. "github.com/TeamZenithy/Araha/config"
+	"github.com/TeamZenithy/Araha/config"
 	"github.com/TeamZenithy/Araha/db"
 	"github.com/TeamZenithy/Araha/events"
 	"github.com/TeamZenithy/Araha/initializer"
@@ -19,24 +19,24 @@ import (
 )
 
 func main() {
-	LoadConfig()
+	config.LoadConfig()
 
 	initializer.InitLang()
 	db.InitRedis()
 
 	go web.InitWeb()
 
-	manager := sharder.New("Bot " + Config().Token)
+	manager := sharder.New("Bot " + config.Get().Token)
 	manager.Name = "Araha"
-	manager.LogChannel = Config().ShardLogChannel
-	manager.StatusMessageChannel = Config().ShardStatusLogChannel
+	manager.LogChannel = config.Get().ShardLogChannel
+	manager.StatusMessageChannel = config.Get().ShardStatusLogChannel
 	// register events
 	manager.AddHandler(events.Ready)
 	manager.AddHandler(events.MessageCreate)
 	manager.AddHandler(events.VoiceServerUpdate)
 	manager.AddHandler(events.VoiceStateUpdate)
 
-	if Config().Release {
+	if config.Get().Release {
 		recommended, err := manager.GetRecommendedCount()
 		if err != nil {
 			logger.Fatal("Failed getting recommended shard count")
