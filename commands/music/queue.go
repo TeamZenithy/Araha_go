@@ -29,7 +29,7 @@ func queue(c *handler.Context) {
 	ms := c.Get("queue").(*model.MusicStruct)
 	fields := []*discordgo.MessageEmbedField{}
 
-	queueLink := "https://araha.b1ackange1.me/" + c.Locale + "/queue/" + c.Msg.GuildID
+	queueLink := "https://araha.aroxu.me/" + c.Locale + "/queue/" + c.Msg.GuildID
 	if !config.Get().Release {
 		queueLink = "http://localhost:8096/" + c.Locale + "/queue/" + c.Msg.GuildID
 	}
