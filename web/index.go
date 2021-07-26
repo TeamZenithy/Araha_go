@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/TeamZenithy/Araha/config"
 	"github.com/TeamZenithy/Araha/model"
 	"github.com/TeamZenithy/Araha/utils"
 	"github.com/gin-gonic/gin"
@@ -36,6 +37,11 @@ func InitWeb() {
 		"add":  templateAdd,
 	}
 	r.SetFuncMap(funcMap)
+	if config.Get().Release {
+		gin.SetMode(gin.ReleaseMode)
+	} else {
+		gin.SetMode(gin.DebugMode)
+	}
 	r.LoadHTMLGlob("static/web/public/*")
 	r.GET("/:lang/queue/:guildID", Lang(), handleQueue)
 	r.NoRoute(func(c *gin.Context) {
