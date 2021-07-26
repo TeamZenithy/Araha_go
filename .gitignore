@@ -1,3 +1,6 @@
+#macOS System
+.DS_Store
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -14,11 +17,20 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 config.toml
-.DS_Store
+config.release.toml
+
+# GoLand
 CompileDaemon
 .idea/
+
+# Lavalink.jar related
 lavalink/logs/
 lavalink/application.yml
 lavalink/Lavalink.jar
 *.log
+
+# Build Binary file
 Araha
+
+# Go Language related
+go.sum
