@@ -1,130 +1,130 @@
 [
-    {
-        "name": "NONE",
-        "text": "없음"
-    },
-    {
-        "name": "CREATE_INSTANT_INVITE",
-        "text": "초대 코드 만들기"
-    },
-    {
-        "name":"KICK_MEMBERS",
-        "text": "멤버 추방하기"
-    },
-    {
-        "name":"BAN_MEMBERS",
-        "text": "멤버 차단하기"
-    },
-    {
-        "name": "ADMINISTRATOR",
-        "text": "관리자"
-    },
-    {
-        "name": "MANAGE_CHANNELS",
-        "text": "채널 관리하기"
-    },
-    {
-        "name": "MANAGE_GUILD",
-        "text": "서버 관리하기"
-    },
-    {
-        "name": "ADD_REACTIONS",
-        "text": "반응 추가하기"
-    },
-    {
-        "name": "VIEW_AUDIT_LOG",
-        "text": "감사 로그 보기"
-    },
-    {
-        "name": "PRIORITY_SPEAKER",
-        "text": "우선 발언권"
-    },
-    {
-        "name": "STREAM",
-        "text": "동영상"
-    },
-    {
-        "name": "VIEW_CHANNEL",
-        "text": "채널 보기"
-    },
-    {
-        "name": "SEND_MESSAGES",
-        "text": "메시지 보내기"
-    },
-    {
-        "name": "SEND_TTS_MESSAGES",
-        "text": "TTS 메시지 보내기"
-    },
-    {
-        "name": "MANAGE_MESSAGES",
-        "text": "메시지 관리"
-    },
-    {
-        "name": "EMBED_LINKS",
-        "text": "링크 첨부"
-    },
-    {
-        "name": "ATTACH_FILES",
-        "text": "파일 첨부"
-    },
-    {
-        "name": "READ_MESSAGE_HISTORY",
-        "text": "메시지 기록 보기"
-    },
-    {
-        "name": "MENTION_EVERYONE",
-        "text": "@everyone, @here, 모든 역할 멘션하기"
-    },
-    {
-        "name": "USE_EXTERNAL_EMOJIS",
-        "text": "외부 이모티콘 사용하기"
-    },
-    {
-        "name": "VIEW_GUILD_INSIGHTS",
-        "text": "서버 통계 보기"
-    },
-    {
-        "name": "CONNECT",
-        "text": "연결"
-    },
-    {
-        "name": "SPEAK",
-        "text": "말하기"
-    },
-    {
-        "name": "MUTE_MEMBERS",
-        "text": "멤버들의 마이크 음소거하기"
-    },
-    {
-        "name": "DEAFEN_MEMBERS",
-        "text": "멤버의 헤드셋 음소거하기"
-    },
-    {
-        "name": "MOVE_MEMBERS",
-        "text": "멤버 이동"
-    },
-    {
-        "name": "USE_VAD",
-        "text": "음성 감지 사용"
-    },
-    {
-        "name": "CHANGE_NICKNAME",
-        "text": "별명 변경하기"
-    },
-    {
-        "name": "MANAGE_NICKNAMES",
-        "text": "별명 관리하기"
-    },
-    {
-        "name": "MANAGE_ROLES",
-        "text": "역할 관리하기"
-    },
-    {
-        "name": "MANAGE_WEBHOOKS",
-        "text": "웹후크 관리하기"
-    },
-    {
-        "name":"MANAGE_EMOJIS",
-        "text":"이모티콘 관리"
-    }
+  {
+    "name": "NONE",
+    "text": "없음"
+  },
+  {
+    "name": "CREATE_INSTANT_INVITE",
+    "text": "초대 코드 만들기"
+  },
+  {
+    "name": "KICK_MEMBERS",
+    "text": "멤버 추방하기"
+  },
+  {
+    "name": "BAN_MEMBERS",
+    "text": "멤버 차단하기"
+  },
+  {
+    "name": "ADMINISTRATOR",
+    "text": "관리자"
+  },
+  {
+    "name": "MANAGE_CHANNELS",
+    "text": "채널 관리하기"
+  },
+  {
+    "name": "MANAGE_GUILD",
+    "text": "서버 관리하기"
+  },
+  {
+    "name": "ADD_REACTIONS",
+    "text": "반응 추가하기"
+  },
+  {
+    "name": "VIEW_AUDIT_LOG",
+    "text": "감사 로그 보기"
+  },
+  {
+    "name": "PRIORITY_SPEAKER",
+    "text": "우선 발언권"
+  },
+  {
+    "name": "STREAM",
+    "text": "동영상"
+  },
+  {
+    "name": "VIEW_CHANNEL",
+    "text": "채널 보기"
+  },
+  {
+    "name": "SEND_MESSAGES",
+    "text": "메시지 보내기"
+  },
+  {
+    "name": "SEND_TTS_MESSAGES",
+    "text": "TTS 메시지 보내기"
+  },
+  {
+    "name": "MANAGE_MESSAGES",
+    "text": "메시지 관리"
+  },
+  {
+    "name": "EMBED_LINKS",
+    "text": "링크 첨부"
+  },
+  {
+    "name": "ATTACH_FILES",
+    "text": "파일 첨부"
+  },
+  {
+    "name": "READ_MESSAGE_HISTORY",
+    "text": "메시지 기록 보기"
+  },
+  {
+    "name": "MENTION_EVERYONE",
+    "text": "@everyone, @here, 모든 역할 멘션하기"
+  },
+  {
+    "name": "USE_EXTERNAL_EMOJIS",
+    "text": "외부 이모티콘 사용하기"
+  },
+  {
+    "name": "VIEW_GUILD_INSIGHTS",
+    "text": "서버 통계 보기"
+  },
+  {
+    "name": "CONNECT",
+    "text": "연결"
+  },
+  {
+    "name": "SPEAK",
+    "text": "말하기"
+  },
+  {
+    "name": "MUTE_MEMBERS",
+    "text": "멤버들의 마이크 음소거하기"
+  },
+  {
+    "name": "DEAFEN_MEMBERS",
+    "text": "멤버의 헤드셋 음소거하기"
+  },
+  {
+    "name": "MOVE_MEMBERS",
+    "text": "멤버 이동"
+  },
+  {
+    "name": "USE_VAD",
+    "text": "음성 감지 사용"
+  },
+  {
+    "name": "CHANGE_NICKNAME",
+    "text": "별명 변경하기"
+  },
+  {
+    "name": "MANAGE_NICKNAMES",
+    "text": "별명 관리하기"
+  },
+  {
+    "name": "MANAGE_ROLES",
+    "text": "역할 관리하기"
+  },
+  {
+    "name": "MANAGE_WEBHOOKS",
+    "text": "웹후크 관리하기"
+  },
+  {
+    "name": "MANAGE_EMOJIS",
+    "text": "이모티콘 관리"
+  }
 ]

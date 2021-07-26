@@ -1,42 +1,42 @@
 [
-    {
-        "name": "Alias",
-        "text": "별명"
-    },
-    {
-        "name": "Command",
-        "text": "명령어"
-    },
-    {
-        "name": "CommandList",
-        "text": "명령어 목록"
-    },
-    {
-        "name": "Usage",
-        "text": "사용 예"
-    },
-    {
-        "name": "ReqArgs",
-        "text": "필수 인자"
-    },
-    {
-        "name": "None",
-        "text": "없음"
-    },
-    {
-        "name": "BRNotFound",
-        "text": "그 명령어는 존재하지 않습니다"
-    },
-    {
-        "name": "BRPage",
-        "text": "이 페이지는 존재하지 않습니다"
-    },
-    {
-        "name": "Permission",
-        "text": "권한"
-    },
-    {
-        "name": "BRPermission",
-        "text": "해당 명령어를 실행할 수 있는 permission을 가지고 있지 않습니다."
-    }
+  {
+    "name": "Alias",
+    "text": "별명"
+  },
+  {
+    "name": "Command",
+    "text": "명령어"
+  },
+  {
+    "name": "CommandList",
+    "text": "명령어 목록"
+  },
+  {
+    "name": "Usage",
+    "text": "사용 예"
+  },
+  {
+    "name": "ReqArgs",
+    "text": "필수 인자"
+  },
+  {
+    "name": "None",
+    "text": "없음"
+  },
+  {
+    "name": "BRNotFound",
+    "text": "그 명령어는 존재하지 않습니다"
+  },
+  {
+    "name": "BRPage",
+    "text": "이 페이지는 존재하지 않습니다"
+  },
+  {
+    "name": "Permission",
+    "text": "권한"
+  },
+  {
+    "name": "BRPermission",
+    "text": "해당 명령어를 실행할 수 있는 권한을 가지고 있지 않습니다."
+  }
 ]

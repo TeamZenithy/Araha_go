@@ -1,130 +1,130 @@
 [
-    {
-        "name": "NONE",
-        "text": "None"
-    },
-    {
-        "name": "CREATE_INSTANT_INVITE",
-        "text": "Create Invite"
-    },
-    {
-        "name":"KICK_MEMBERS",
-        "text": "Kick Members"
-    },
-    {
-        "name":"BAN_MEMBERS",
-        "text": "Ban Members"
-    },
-    {
-        "name": "ADMINISTRATOR",
-        "text": "Administrator"
-    },
-    {
-        "name": "MANAGE_CHANNELS",
-        "text": "Manage Channels"
-    },
-    {
-        "name": "MANAGE_GUILD",
-        "text": "Manage Server"
-    },
-    {
-        "name": "ADD_REACTIONS",
-        "text": "Add Reactions"
-    },
-    {
-        "name": "VIEW_AUDIT_LOG",
-        "text": "View Audit Log"
-    },
-    {
-        "name": "PRIORITY_SPEAKER",
-        "text": "Priorty Speaker"
-    },
-    {
-        "name": "STREAM",
-        "text": "Video"
-    },
-    {
-        "name": "VIEW_CHANNEL",
-        "text": "View Channels"
-    },
-    {
-        "name": "SEND_MESSAGES",
-        "text": "Send Messages"
-    },
-    {
-        "name": "SEND_TTS_MESSAGES",
-        "text": "Send Text-to-Speech Messages"
-    },
-    {
-        "name": "MANAGE_MESSAGES",
-        "text": "Manage Messages"
-    },
-    {
-        "name": "EMBED_LINKS",
-        "text": "Embed Links"
-    },
-    {
-        "name": "ATTACH_FILES",
-        "text": "Attach Files"
-    },
-    {
-        "name": "READ_MESSAGE_HISTORY",
-        "text": "Read Message History"
-    },
-    {
-        "name": "MENTION_EVERYONE",
-        "text": "Mention @everyone, @here, and All Roles"
-    },
-    {
-        "name": "USE_EXTERNAL_EMOJIS",
-        "text": "Use External Emoji"
-    },
-    {
-        "name": "VIEW_GUILD_INSIGHTS",
-        "text": "View Server Insights"
-    },
-    {
-        "name": "CONNECT",
-        "text": "Connect"
-    },
-    {
-        "name": "SPEAK",
-        "text": "Speak"
-    },
-    {
-        "name": "MUTE_MEMBERS",
-        "text": "Mute Members"
-    },
-    {
-        "name": "DEAFEN_MEMBERS",
-        "text": "Defean Members"
-    },
-    {
-        "name": "MOVE_MEMBERS",
-        "text": "Move Members"
-    },
-    {
-        "name": "USE_VAD",
-        "text": "Use Voice Activity"
-    },
-    {
-        "name": "CHANGE_NICKNAME",
-        "text": "Change Nickname"
-    },
-    {
-        "name": "MANAGE_NICKNAMES",
-        "text": "Manage Nicknames"
-    },
-    {
-        "name": "MANAGE_ROLES",
-        "text": "Manage Roles"
-    },
-    {
-        "name": "MANAGE_WEBHOOKS",
-        "text": "Manage Webhooks"
-    },
-    {
-        "name":"MANAGE_EMOJIS",
-        "text":"Manage Emojis"
-    }
+  {
+    "name": "NONE",
+    "text": "None"
+  },
+  {
+    "name": "CREATE_INSTANT_INVITE",
+    "text": "Create Invite"
+  },
+  {
+    "name": "KICK_MEMBERS",
+    "text": "Kick Members"
+  },
+  {
+    "name": "BAN_MEMBERS",
+    "text": "Ban Members"
+  },
+  {
+    "name": "ADMINISTRATOR",
+    "text": "Administrator"
+  },
+  {
+    "name": "MANAGE_CHANNELS",
+    "text": "Manage Channels"
+  },
+  {
+    "name": "MANAGE_GUILD",
+    "text": "Manage Server"
+  },
+  {
+    "name": "ADD_REACTIONS",
+    "text": "Add Reactions"
+  },
+  {
+    "name": "VIEW_AUDIT_LOG",
+    "text": "View Audit Log"
+  },
+  {
+    "name": "PRIORITY_SPEAKER",
+    "text": "Priorty Speaker"
+  },
+  {
+    "name": "STREAM",
+    "text": "Video"
+  },
+  {
+    "name": "VIEW_CHANNEL",
+    "text": "View Channels"
+  },
+  {
+    "name": "SEND_MESSAGES",
+    "text": "Send Messages"
+  },
+  {
+    "name": "SEND_TTS_MESSAGES",
+    "text": "Send Text-to-Speech Messages"
+  },
+  {
+    "name": "MANAGE_MESSAGES",
+    "text": "Manage Messages"
+  },
+  {
+    "name": "EMBED_LINKS",
+    "text": "Embed Links"
+  },
+  {
+    "name": "ATTACH_FILES",
+    "text": "Attach Files"
+  },
+  {
+    "name": "READ_MESSAGE_HISTORY",
+    "text": "Read Message History"
+  },
+  {
+    "name": "MENTION_EVERYONE",
+    "text": "Mention @everyone, @here, and All Roles"
+  },
+  {
+    "name": "USE_EXTERNAL_EMOJIS",
+    "text": "Use External Emoji"
+  },
+  {
+    "name": "VIEW_GUILD_INSIGHTS",
+    "text": "View Server Insights"
+  },
+  {
+    "name": "CONNECT",
+    "text": "Connect"
+  },
+  {
+    "name": "SPEAK",
+    "text": "Speak"
+  },
+  {
+    "name": "MUTE_MEMBERS",
+    "text": "Mute Members"
+  },
+  {
+    "name": "DEAFEN_MEMBERS",
+    "text": "Defean Members"
+  },
+  {
+    "name": "MOVE_MEMBERS",
+    "text": "Move Members"
+  },
+  {
+    "name": "USE_VAD",
+    "text": "Use Voice Activity"
+  },
+  {
+    "name": "CHANGE_NICKNAME",
+    "text": "Change Nickname"
+  },
+  {
+    "name": "MANAGE_NICKNAMES",
+    "text": "Manage Nicknames"
+  },
+  {
+    "name": "MANAGE_ROLES",
+    "text": "Manage Roles"
+  },
+  {
+    "name": "MANAGE_WEBHOOKS",
+    "text": "Manage Webhooks"
+  },
+  {
+    "name": "MANAGE_EMOJIS",
+    "text": "Manage Emojis"
+  }
 ]
