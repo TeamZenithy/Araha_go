@@ -20,6 +20,9 @@ import (
 
 func main() {
 	config.LoadConfig()
+	if !config.Get().Release {
+		logger.Info("Development mode detected!")
+	}
 
 	initializer.InitLang()
 	db.InitRedis()
