@@ -10,7 +10,6 @@ import (
 //utils.RedisHost, RedisPass, RedisPort
 
 func InitRedis() {
-
 	opt, err := redis.ParseURL("redis://" + config.Get().RedisHost + ":" + config.Get().RedisPort + "")
 	if err != nil {
 		logger.Panic(err.Error())
